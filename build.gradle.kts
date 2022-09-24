@@ -22,7 +22,7 @@ buildscript {
 }
 
 group = "com.myfood"
-version = "0.0.1"
+version = "0.3.2"
 application {
     mainClass.set("com.myfood.ApplicationKt")
 
@@ -68,4 +68,18 @@ dependencies {
 
 tasks {
     create("stage").dependsOn("installDist")
+}
+
+publishing {
+    publications {
+        register<MavenPublication>("maven") {
+            groupId = "com.myfood"
+            artifactId = "myfood-ktor-server"
+            version = "0.3.2"
+
+            afterEvaluate {
+                from(components["java"])
+            }
+        }
+    }
 }
