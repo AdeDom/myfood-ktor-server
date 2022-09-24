@@ -1,0 +1,1 @@
+rootProject.name = "com.myfood.myfood-ktor-server"
