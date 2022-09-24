@@ -9,17 +9,14 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import org.kodein.di.instance
-import org.kodein.di.ktor.closestDI
+import org.koin.ktor.ext.inject
 
 fun Route.categoryRoute() {
 
+    val insertCategoryUseCase by inject<InsertCategoryUseCase>()
     post("/api/category/insert") {
-        val insertCategoryUseCase by closestDI().instance<InsertCategoryUseCase>()
-
         val request = call.receive<InsertCategoryRequest>()
-        val resource = insertCategoryUseCase(request)
-        when (resource) {
+        when (val resource = insertCategoryUseCase(request)) {
             is Resource.Success -> {
                 call.respond(HttpStatusCode.OK, resource.data)
             }
@@ -30,11 +27,9 @@ fun Route.categoryRoute() {
         }
     }
 
+    val getCategoryAllUseCase by inject<GetCategoryAllUseCase>()
     get("/api/category/getCategoryAll") {
-        val getCategoryAllUseCase by closestDI().instance<GetCategoryAllUseCase>()
-
-        val resource = getCategoryAllUseCase()
-        when (resource) {
+        when (val resource = getCategoryAllUseCase()) {
             is Resource.Success -> {
                 call.respond(HttpStatusCode.OK, resource.data)
             }

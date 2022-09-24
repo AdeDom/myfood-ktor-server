@@ -6,7 +6,9 @@ import com.auth0.jwt.impl.PublicClaims
 import java.util.*
 
 class JwtHelper(
-    private val jwtConfig: JwtConfig,
+    private val secret: String,
+    private val issuer: String,
+    private val audience: String,
 ) {
 
     companion object {
@@ -15,20 +17,20 @@ class JwtHelper(
 
     fun encodeAccessToken(userId: String): String {
         return JWT.create()
-            .withAudience(jwtConfig.audience)
-            .withIssuer(jwtConfig.issuer)
+            .withAudience(audience)
+            .withIssuer(issuer)
             .withClaim(USER_ID, userId)
             .withExpiresAt(Date(System.currentTimeMillis() + (36_000_00 * 24 * 1)))
-            .sign(Algorithm.HMAC512(jwtConfig.secret))
+            .sign(Algorithm.HMAC512(secret))
     }
 
     fun encodeRefreshToken(userId: String): String {
         return JWT.create()
-            .withAudience(jwtConfig.audience)
-            .withIssuer(jwtConfig.issuer)
+            .withAudience(audience)
+            .withIssuer(issuer)
             .withClaim(USER_ID, userId)
             .withExpiresAt(Date(System.currentTimeMillis() + (36_000_00 * 24 * 7)))
-            .sign(Algorithm.HMAC512(jwtConfig.secret))
+            .sign(Algorithm.HMAC512(secret))
     }
 
     fun decodeJwtGetUserId(token: String?): String {

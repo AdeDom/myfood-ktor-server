@@ -8,16 +8,13 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import org.kodein.di.instance
-import org.kodein.di.ktor.closestDI
+import org.koin.ktor.ext.inject
 
 fun Route.foodRoute() {
 
+    val myFoodUseCase by inject<MyFoodUseCase>()
     get("/api/my/food") {
-        val myFoodUseCase by closestDI().instance<MyFoodUseCase>()
-
-        val resource = myFoodUseCase()
-        when (resource) {
+        when (val resource = myFoodUseCase()) {
             is Resource.Success -> {
                 call.respond(HttpStatusCode.OK, resource.data)
             }
@@ -28,12 +25,10 @@ fun Route.foodRoute() {
         }
     }
 
+    val insertFoodUseCase by inject<InsertFoodUseCase>()
     post("/api/food/insert") {
-        val insertFoodUseCase by closestDI().instance<InsertFoodUseCase>()
-
         val request = call.receive<InsertFoodRequest>()
-        val resource = insertFoodUseCase(request)
-        when (resource) {
+        when (val resource = insertFoodUseCase(request)) {
             is Resource.Success -> {
                 call.respond(HttpStatusCode.OK, resource.data)
             }
@@ -44,12 +39,10 @@ fun Route.foodRoute() {
         }
     }
 
+    val getFoodDetailUseCase by inject<GetFoodDetailUseCase>()
     get("/api/food/detail") {
-        val getFoodDetailUseCase by closestDI().instance<GetFoodDetailUseCase>()
-
         val foodId = call.parameters["foodId"]
-        val resource = getFoodDetailUseCase(foodId)
-        when (resource) {
+        when (val resource = getFoodDetailUseCase(foodId)) {
             is Resource.Success -> {
                 call.respond(HttpStatusCode.OK, resource.data)
             }
@@ -60,12 +53,10 @@ fun Route.foodRoute() {
         }
     }
 
+    val getFoodByCategoryIdUseCase by inject<GetFoodByCategoryIdUseCase>()
     get("/api/food/getFoodByCategoryId") {
-        val getFoodByCategoryIdUseCase by closestDI().instance<GetFoodByCategoryIdUseCase>()
-
         val categoryId = call.parameters["categoryId"]
-        val resource = getFoodByCategoryIdUseCase(categoryId)
-        when (resource) {
+        when (val resource = getFoodByCategoryIdUseCase(categoryId)) {
             is Resource.Success -> {
                 call.respond(HttpStatusCode.OK, resource.data)
             }
@@ -76,11 +67,9 @@ fun Route.foodRoute() {
         }
     }
 
+    val getFoodAndCategoryGroupAllUseCase by inject<GetFoodAndCategoryGroupAllUseCase>()
     get("/api/food/getFoodAndCategoryGroupAll") {
-        val getFoodAndCategoryGroupAllUseCase by closestDI().instance<GetFoodAndCategoryGroupAllUseCase>()
-
-        val resource = getFoodAndCategoryGroupAllUseCase()
-        when (resource) {
+        when (val resource = getFoodAndCategoryGroupAllUseCase()) {
             is Resource.Success -> {
                 call.respond(HttpStatusCode.OK, resource.data)
             }

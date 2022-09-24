@@ -17,18 +17,16 @@ import com.myfood.server.data.resouce.remote.rating_score.RatingScoreRemoteDataS
 import com.myfood.server.data.resouce.remote.rating_score.RatingScoreRemoteDataSourceImpl
 import com.myfood.server.data.resouce.remote.user.UserRemoteDataSource
 import com.myfood.server.data.resouce.remote.user.UserRemoteDataSourceImpl
-import org.kodein.di.DI
-import org.kodein.di.bindSingleton
-import org.kodein.di.instance
+import org.koin.dsl.module
 
-val remoteDataSourceModule = DI.Module(name = "remote_data_source") {
+val remoteDataSourceModule = module {
 
-    bindSingleton<UserRemoteDataSource> { UserRemoteDataSourceImpl(instance<MySqlDatabase>().getDatabase()) }
-    bindSingleton<MyFoodRemoteDataSource> { MyFoodRemoteDataSourceImpl(instance<MySqlDatabase>().getDatabase()) }
-    bindSingleton<AuthRemoteDataSource> { AuthRemoteDataSourceImpl(instance<MySqlDatabase>().getDatabase()) }
-    bindSingleton<ProfileRemoteDataSource> { ProfileRemoteDataSourceImpl(instance<MySqlDatabase>().getDatabase()) }
-    bindSingleton<CategoryRemoteDataSource> { CategoryRemoteDataSourceImpl(instance<MySqlDatabase>().getDatabase()) }
-    bindSingleton<FoodRemoteDataSource> { FoodRemoteDataSourceImpl(instance<MySqlDatabase>().getDatabase()) }
-    bindSingleton<FavoriteRemoteDataSource> { FavoriteRemoteDataSourceImpl(instance<MySqlDatabase>().getDatabase()) }
-    bindSingleton<RatingScoreRemoteDataSource> { RatingScoreRemoteDataSourceImpl(instance<MySqlDatabase>().getDatabase()) }
+    single<UserRemoteDataSource> { UserRemoteDataSourceImpl(get<MySqlDatabase>().getDatabase()) }
+    single<MyFoodRemoteDataSource> { MyFoodRemoteDataSourceImpl(get<MySqlDatabase>().getDatabase()) }
+    single<AuthRemoteDataSource> { AuthRemoteDataSourceImpl(get<MySqlDatabase>().getDatabase()) }
+    single<ProfileRemoteDataSource> { ProfileRemoteDataSourceImpl(get<MySqlDatabase>().getDatabase()) }
+    single<CategoryRemoteDataSource> { CategoryRemoteDataSourceImpl(get<MySqlDatabase>().getDatabase()) }
+    single<FoodRemoteDataSource> { FoodRemoteDataSourceImpl(get<MySqlDatabase>().getDatabase()) }
+    single<FavoriteRemoteDataSource> { FavoriteRemoteDataSourceImpl(get<MySqlDatabase>().getDatabase()) }
+    single<RatingScoreRemoteDataSource> { RatingScoreRemoteDataSourceImpl(get<MySqlDatabase>().getDatabase()) }
 }

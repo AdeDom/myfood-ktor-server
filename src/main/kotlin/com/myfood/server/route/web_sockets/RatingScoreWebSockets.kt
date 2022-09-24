@@ -11,16 +11,14 @@ import io.ktor.websocket.*
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import org.kodein.di.instance
-import org.kodein.di.ktor.closestDI
+import org.koin.ktor.ext.inject
 import java.util.*
 
 fun Route.ratingScoreWebSocketsRoute() {
 
+    val myRatingScoreUseCase by inject<MyRatingScoreUseCase>()
     val myRatingScoreConnections = Collections.synchronizedSet<DefaultWebSocketSession>(LinkedHashSet())
     webSocket("/ws/rating/myRatingScore") {
-        val myRatingScoreUseCase by closestDI().instance<MyRatingScoreUseCase>()
-
         myRatingScoreConnections += this
         try {
             for (frame in incoming) {

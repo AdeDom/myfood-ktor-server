@@ -15,35 +15,33 @@ import com.myfood.server.usecase.rating_score.DeleteRatingScoreAllUseCase
 import com.myfood.server.usecase.rating_score.GetRatingScoreAllUseCase
 import com.myfood.server.usecase.rating_score.MyRatingScoreUseCase
 import com.myfood.server.usecase.rating_score.SyncDataRatingScoreUseCase
-import org.kodein.di.DI
-import org.kodein.di.bindSingleton
-import org.kodein.di.instance
+import org.koin.dsl.module
 
-val domainModule = DI.Module(name = "domain") {
+val domainModule = module {
 
-    bindSingleton { MyFoodUseCase(instance()) }
-    bindSingleton { LoginUseCase(instance()) }
-    bindSingleton { RegisterUseCase(instance()) }
-    bindSingleton { RefreshTokenUseCase(instance(), instance()) }
-    bindSingleton { DeleteAccountUseCase(instance()) }
-    bindSingleton { LogoutUseCase(instance()) }
-    bindSingleton { UserProfileUseCase(instance()) }
-    bindSingleton { ChangeProfileUseCase(instance()) }
-    bindSingleton { ChangePasswordUseCase(instance()) }
-    bindSingleton { InsertCategoryUseCase(instance()) }
-    bindSingleton { InsertFoodUseCase(instance(), instance()) }
-    bindSingleton { GetFoodDetailUseCase(instance()) }
-    bindSingleton { GetCategoryAllUseCase(instance()) }
-    bindSingleton { GetFoodByCategoryIdUseCase(instance(), instance()) }
-    bindSingleton { GetFoodAndCategoryGroupAllUseCase(instance(), instance()) }
-    bindSingleton { GetFavoriteAllUseCase(instance()) }
-    bindSingleton { DeleteFavoriteAllUseCase(instance()) }
-    bindSingleton { MyFavoriteUseCase(instance(), instance()) }
-    bindSingleton { SyncDataFavoriteUseCase(instance()) }
-    bindSingleton { GetRatingScoreAllUseCase(instance()) }
-    bindSingleton { DeleteRatingScoreAllUseCase(instance()) }
-    bindSingleton { MyRatingScoreUseCase(instance(), instance()) }
-    bindSingleton { SyncDataRatingScoreUseCase(instance()) }
-    bindSingleton { SyncDataAuthUseCase(instance()) }
-    bindSingleton { TokenUseCase(instance()) }
+    single { MyFoodUseCase(get()) }
+    single { LoginUseCase(get()) }
+    single { RegisterUseCase(get()) }
+    single { RefreshTokenUseCase(get(), get()) }
+    single { DeleteAccountUseCase(get()) }
+    single { LogoutUseCase(get()) }
+    single { UserProfileUseCase(get()) }
+    single { ChangeProfileUseCase(get()) }
+    single { ChangePasswordUseCase(get()) }
+    single { InsertCategoryUseCase(get()) }
+    single { InsertFoodUseCase(get(), get()) }
+    single { GetFoodDetailUseCase(get()) }
+    single { GetCategoryAllUseCase(get()) }
+    single { GetFoodByCategoryIdUseCase(get(), get()) }
+    single { GetFoodAndCategoryGroupAllUseCase(get(), get()) }
+    single { GetFavoriteAllUseCase(get()) }
+    single { DeleteFavoriteAllUseCase(get()) }
+    single { MyFavoriteUseCase(get(), get()) }
+    single { SyncDataFavoriteUseCase(get()) }
+    single { GetRatingScoreAllUseCase(get()) }
+    single { DeleteRatingScoreAllUseCase(get()) }
+    single { MyRatingScoreUseCase(get(), get()) }
+    single { SyncDataRatingScoreUseCase(get()) }
+    single { SyncDataAuthUseCase(get()) }
+    single { TokenUseCase(get()) }
 }

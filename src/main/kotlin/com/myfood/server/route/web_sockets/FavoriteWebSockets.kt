@@ -11,16 +11,14 @@ import io.ktor.websocket.*
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import org.kodein.di.instance
-import org.kodein.di.ktor.closestDI
+import org.koin.ktor.ext.inject
 import java.util.*
 
 fun Route.favoriteWebSocketsRoute() {
 
+    val myFavoriteUseCase by inject<MyFavoriteUseCase>()
     val myFavoriteConnections = Collections.synchronizedSet<DefaultWebSocketSession>(LinkedHashSet())
     webSocket("/ws/favorite/myFavorite") {
-        val myFavoriteUseCase by closestDI().instance<MyFavoriteUseCase>()
-
         myFavoriteConnections += this
         try {
             for (frame in incoming) {

@@ -12,33 +12,14 @@ import com.myfood.server.data.repositories.profile.ProfileRepository
 import com.myfood.server.data.repositories.profile.ProfileRepositoryImpl
 import com.myfood.server.data.repositories.rating_score.RatingScoreRepository
 import com.myfood.server.data.repositories.rating_score.RatingScoreRepositoryImpl
-import org.kodein.di.DI
-import org.kodein.di.bindSingleton
-import org.kodein.di.instance
+import org.koin.dsl.module
 
-val repositoryModule = DI.Module(name = "repository") {
+val repositoryModule = module {
 
-    bindSingleton<FoodRepository> {
-        FoodRepositoryImpl(
-            instance(),
-            instance(),
-            instance(),
-            instance(),
-            instance(),
-            instance(),
-        )
-    }
-    bindSingleton<AuthRepository> { AuthRepositoryImpl(instance(), instance(), instance()) }
-    bindSingleton<ProfileRepository> {
-        ProfileRepositoryImpl(
-            instance(),
-            instance(),
-            instance(),
-            instance(),
-            instance(),
-        )
-    }
-    bindSingleton<CategoryRepository> { CategoryRepositoryImpl(instance(), instance()) }
-    bindSingleton<FavoriteRepository> { FavoriteRepositoryImpl(instance(), instance()) }
-    bindSingleton<RatingScoreRepository> { RatingScoreRepositoryImpl(instance(), instance()) }
+    single<FoodRepository> { FoodRepositoryImpl(get(), get(), get(), get(), get(), get()) }
+    single<AuthRepository> { AuthRepositoryImpl(get(), get(), get()) }
+    single<ProfileRepository> { ProfileRepositoryImpl(get(), get(), get(), get(), get()) }
+    single<CategoryRepository> { CategoryRepositoryImpl(get(), get()) }
+    single<FavoriteRepository> { FavoriteRepositoryImpl(get(), get()) }
+    single<RatingScoreRepository> { RatingScoreRepositoryImpl(get(), get()) }
 }

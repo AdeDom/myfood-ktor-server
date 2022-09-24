@@ -5,17 +5,19 @@ import com.zaxxer.hikari.HikariDataSource
 import org.jetbrains.exposed.sql.Database
 
 class MySqlDatabaseImpl(
-    private val mySqlDatabaseConfig: MySqlDatabaseConfig,
+    private val usernameSecret: String,
+    private val passwordSecret: String,
+    private val jdbcUrlSecret: String,
 ) : MySqlDatabase {
 
     private var database: Database
 
     init {
         val config = HikariConfig().apply {
-            jdbcUrl = mySqlDatabaseConfig.jdbcUrl
+            jdbcUrl = jdbcUrlSecret
             driverClassName = "com.mysql.cj.jdbc.Driver"
-            username = mySqlDatabaseConfig.username
-            password = mySqlDatabaseConfig.password
+            username = usernameSecret
+            password = passwordSecret
             maximumPoolSize = 10
         }
         val dataSource = HikariDataSource(config)

@@ -12,16 +12,13 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import org.kodein.di.instance
-import org.kodein.di.ktor.closestDI
+import org.koin.ktor.ext.inject
 
 fun Route.favoriteRoute() {
 
+    val getFavoriteAllUseCase by inject<GetFavoriteAllUseCase>()
     get("/api/favorite/getFavoriteAll") {
-        val getFavoriteAllUseCase by closestDI().instance<GetFavoriteAllUseCase>()
-
-        val resource = getFavoriteAllUseCase()
-        when (resource) {
+        when (val resource = getFavoriteAllUseCase()) {
             is Resource.Success -> {
                 call.respond(HttpStatusCode.OK, resource.data)
             }
@@ -32,13 +29,11 @@ fun Route.favoriteRoute() {
         }
     }
 
+    val myFavoriteUseCase by inject<MyFavoriteUseCase>()
     post("/api/favorite/myFavorite") {
-        val myFavoriteUseCase by closestDI().instance<MyFavoriteUseCase>()
-
         val authKey = call.request.header(RequestKeyConstant.AUTHORIZATION_KEY)
         val myFavoriteRequest = call.receive<MyFavoriteRequest>()
-        val resource = myFavoriteUseCase(authKey, myFavoriteRequest)
-        when (resource) {
+        when (val resource = myFavoriteUseCase(authKey, myFavoriteRequest)) {
             is Resource.Success -> {
                 call.respond(HttpStatusCode.OK, resource.data)
             }
@@ -49,11 +44,9 @@ fun Route.favoriteRoute() {
         }
     }
 
+    val deleteFavoriteAllUseCase by inject<DeleteFavoriteAllUseCase>()
     delete("/api/favorite/deleteAll") {
-        val deleteFavoriteAllUseCase by closestDI().instance<DeleteFavoriteAllUseCase>()
-
-        val resource = deleteFavoriteAllUseCase()
-        when (resource) {
+        when (val resource = deleteFavoriteAllUseCase()) {
             is Resource.Success -> {
                 call.respond(HttpStatusCode.OK, resource.data)
             }
@@ -64,11 +57,9 @@ fun Route.favoriteRoute() {
         }
     }
 
+    val syncDataFavoriteUseCase by inject<SyncDataFavoriteUseCase>()
     post("/api/favorite/syncDataFavorite") {
-        val syncDataFavoriteUseCase by closestDI().instance<SyncDataFavoriteUseCase>()
-
-        val resource = syncDataFavoriteUseCase()
-        when (resource) {
+        when (val resource = syncDataFavoriteUseCase()) {
             is Resource.Success -> {
                 call.respond(HttpStatusCode.OK, resource.data)
             }

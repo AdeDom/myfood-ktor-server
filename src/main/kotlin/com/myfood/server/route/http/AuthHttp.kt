@@ -14,17 +14,14 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import org.kodein.di.instance
-import org.kodein.di.ktor.closestDI
+import org.koin.ktor.ext.inject
 
 fun Route.authRoute() {
 
+    val loginUseCase by inject<LoginUseCase>()
     post("/api/auth/login") {
-        val loginUseCase by closestDI().instance<LoginUseCase>()
-
         val request = call.receive<LoginRequest>()
-        val resource = loginUseCase(request)
-        when (resource) {
+        when (val resource = loginUseCase(request)) {
             is Resource.Success -> {
                 call.respond(HttpStatusCode.OK, resource.data)
             }
@@ -35,12 +32,10 @@ fun Route.authRoute() {
         }
     }
 
+    val registerUseCase by inject<RegisterUseCase>()
     post("/api/auth/register") {
-        val registerUseCase by closestDI().instance<RegisterUseCase>()
-
         val request = call.receive<RegisterRequest>()
-        val resource = registerUseCase(request)
-        when (resource) {
+        when (val resource = registerUseCase(request)) {
             is Resource.Success -> {
                 call.respond(HttpStatusCode.OK, resource.data)
             }
@@ -51,12 +46,10 @@ fun Route.authRoute() {
         }
     }
 
+    val refreshTokenUseCase by inject<RefreshTokenUseCase>()
     post("/api/auth/refreshToken") {
-        val refreshTokenUseCase by closestDI().instance<RefreshTokenUseCase>()
-
         val request = call.receive<TokenRequest>()
-        val resource = refreshTokenUseCase(request)
-        when (resource) {
+        when (val resource = refreshTokenUseCase(request)) {
             is Resource.Success -> {
                 call.respond(HttpStatusCode.OK, resource.data)
             }
@@ -67,12 +60,10 @@ fun Route.authRoute() {
         }
     }
 
+    val logoutUseCase by inject<LogoutUseCase>()
     postAuth("/api/auth/logout") {
-        val logoutUseCase by closestDI().instance<LogoutUseCase>()
-
         val userId = call.userId
-        val resource = logoutUseCase(userId)
-        when (resource) {
+        when (val resource = logoutUseCase(userId)) {
             is Resource.Success -> {
                 call.respond(HttpStatusCode.OK, resource.data)
             }
@@ -83,13 +74,11 @@ fun Route.authRoute() {
         }
     }
 
+    val changePasswordUseCase by inject<ChangePasswordUseCase>()
     putAuth("/api/auth/changePassword") {
-        val changePasswordUseCase by closestDI().instance<ChangePasswordUseCase>()
-
         val userId = call.userId
         val request = call.receive<ChangePasswordRequest>()
-        val resource = changePasswordUseCase(userId, request)
-        when (resource) {
+        when (val resource = changePasswordUseCase(userId, request)) {
             is Resource.Success -> {
                 call.respond(HttpStatusCode.OK, resource.data)
             }
@@ -100,11 +89,9 @@ fun Route.authRoute() {
         }
     }
 
+    val syncDataAuthUseCase by inject<SyncDataAuthUseCase>()
     post("/api/auth/syncDataAuth") {
-        val syncDataAuthUseCase by closestDI().instance<SyncDataAuthUseCase>()
-
-        val resource = syncDataAuthUseCase()
-        when (resource) {
+        when (val resource = syncDataAuthUseCase()) {
             is Resource.Success -> {
                 call.respond(HttpStatusCode.OK, resource.data)
             }

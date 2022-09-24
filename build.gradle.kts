@@ -1,7 +1,6 @@
 val ktor_version: String by project
 val kotlin_version: String by project
 val logback_version: String by project
-val kodein_version: String by project
 val exposed_version: String by project
 
 plugins {
@@ -44,7 +43,8 @@ dependencies {
     implementation("io.ktor:ktor-server-content-negotiation:$ktor_version")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
 
-    implementation("org.kodein.di:kodein-di-framework-ktor-server-jvm:$kodein_version")
+    implementation("io.insert-koin:koin-ktor:3.2.2")
+    implementation("io.insert-koin:koin-logger-slf4j:3.2.2")
 
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-dao:$exposed_version")

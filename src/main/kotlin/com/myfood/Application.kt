@@ -10,6 +10,6 @@ fun Application.module() {
     configureCallLogging()
     configureContentNegotiation()
     configureWebSockets()
-    configureKodein()
+    configureKoin()
     configureRouting()
 }

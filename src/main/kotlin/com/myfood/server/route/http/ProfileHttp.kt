@@ -14,17 +14,14 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import org.kodein.di.instance
-import org.kodein.di.ktor.closestDI
+import org.koin.ktor.ext.inject
 
 fun Route.profileRoute() {
 
+    val userProfileUseCase by inject<UserProfileUseCase>()
     getAuth("/api/profile/user") {
-        val userProfileUseCase by closestDI().instance<UserProfileUseCase>()
-
         val userId = call.userId
-        val resource = userProfileUseCase(userId)
-        when (resource) {
+        when (val resource = userProfileUseCase(userId)) {
             is Resource.Success -> {
                 call.respond(HttpStatusCode.OK, resource.data)
             }
@@ -35,13 +32,11 @@ fun Route.profileRoute() {
         }
     }
 
+    val changeProfileUseCase by inject<ChangeProfileUseCase>()
     putAuth("/api/profile/changeProfile") {
-        val changeProfileUseCase by closestDI().instance<ChangeProfileUseCase>()
-
         val userId = call.userId
         val request = call.receive<ChangeProfileRequest>()
-        val resource = changeProfileUseCase(userId, request)
-        when (resource) {
+        when (val resource = changeProfileUseCase(userId, request)) {
             is Resource.Success -> {
                 call.respond(HttpStatusCode.OK, resource.data)
             }
@@ -52,12 +47,10 @@ fun Route.profileRoute() {
         }
     }
 
+    val deleteAccountUseCase by inject<DeleteAccountUseCase>()
     deleteAuth("/api/profile/deleteAccount") {
-        val deleteAccountUseCase by closestDI().instance<DeleteAccountUseCase>()
-
         val userId = call.userId
-        val resource = deleteAccountUseCase(userId)
-        when (resource) {
+        when (val resource = deleteAccountUseCase(userId)) {
             is Resource.Success -> {
                 call.respond(HttpStatusCode.OK, resource.data)
             }

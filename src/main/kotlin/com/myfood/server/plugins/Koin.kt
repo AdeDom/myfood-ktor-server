@@ -1,7 +1,6 @@
 package com.myfood.server.plugins
 
 import com.myfood.server.data.database.mysql.MySqlDatabase
-import com.myfood.server.data.database.mysql.MySqlDatabaseConfig
 import com.myfood.server.data.database.mysql.MySqlDatabaseImpl
 import com.myfood.server.data.database.sqlite.SqliteDatabase
 import com.myfood.server.data.database.sqlite.SqliteDatabaseImpl
@@ -9,14 +8,13 @@ import com.myfood.server.di.domainModule
 import com.myfood.server.di.localDataSourceModule
 import com.myfood.server.di.remoteDataSourceModule
 import com.myfood.server.di.repositoryModule
-import com.myfood.server.utility.jwt.JwtConfig
 import com.myfood.server.utility.jwt.JwtHelper
 import io.ktor.server.application.*
-import org.kodein.di.bindSingleton
-import org.kodein.di.instance
-import org.kodein.di.ktor.di
+import org.koin.dsl.module
+import org.koin.ktor.plugin.Koin
+import org.koin.logger.slf4jLogger
 
-fun Application.configureKodein() {
+fun Application.configureKoin() {
     val databaseNameEnv = environment.config.property("my_food_db.database_name").getString()
     val usernameEnv = environment.config.property("my_food_db.username").getString()
     val passwordEnv = environment.config.property("my_food_db.password").getString()
@@ -27,37 +25,32 @@ fun Application.configureKodein() {
     val audience = environment.config.property("jwt.audience").getString()
     val myRealm = environment.config.property("jwt.realm").getString()
 
-    // kodein dependencies injection
-    di {
-        // database
-        bindSingleton {
-            MySqlDatabaseConfig(
-                databaseName = databaseNameEnv,
-                username = usernameEnv,
-                password = passwordEnv,
-                jdbcUrl = jdbcUrlEnv,
-            )
-        }
-        bindSingleton<MySqlDatabase> { MySqlDatabaseImpl(instance()) }
-        bindSingleton<SqliteDatabase> { SqliteDatabaseImpl() }
+    // koin dependencies injection
+    install(Koin) {
+        slf4jLogger()
+        modules(
+            module {
+                single<MySqlDatabase> {
+                    MySqlDatabaseImpl(
+                        usernameSecret = usernameEnv,
+                        passwordSecret = passwordEnv,
+                        jdbcUrlSecret = jdbcUrlEnv,
+                    )
+                }
+                single<SqliteDatabase> { SqliteDatabaseImpl() }
 
-        // structure
-        importAll(
+                single {
+                    JwtHelper(
+                        secret = secret,
+                        issuer = issuer,
+                        audience = audience,
+                    )
+                }
+            },
             localDataSourceModule,
             remoteDataSourceModule,
             repositoryModule,
             domainModule,
         )
-
-        // jwt
-        bindSingleton {
-            JwtConfig(
-                secret = secret,
-                issuer = issuer,
-                audience = audience,
-                realm = myRealm,
-            )
-        }
-        bindSingleton { JwtHelper(instance()) }
     }
 }

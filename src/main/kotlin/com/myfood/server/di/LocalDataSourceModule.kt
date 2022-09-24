@@ -15,18 +15,16 @@ import com.myfood.server.data.resouce.local.rating_score.RatingScoreLocalDataSou
 import com.myfood.server.data.resouce.local.rating_score.RatingScoreLocalDataSourceImpl
 import com.myfood.server.data.resouce.local.user.UserLocalDataSource
 import com.myfood.server.data.resouce.local.user.UserLocalDataSourceImpl
-import org.kodein.di.DI
-import org.kodein.di.bindSingleton
-import org.kodein.di.instance
+import org.koin.dsl.module
 
-val localDataSourceModule = DI.Module(name = "local_data_source") {
+val localDataSourceModule = module {
 
-    bindSingleton<FavoriteLocalDataSource> { FavoriteLocalDataSourceImpl(instance<SqliteDatabase>().getDatabase()) }
-    bindSingleton<RatingScoreLocalDataSource> { RatingScoreLocalDataSourceImpl(instance<SqliteDatabase>().getDatabase()) }
-    bindSingleton<AuthLocalDataSource> { AuthLocalDataSourceImpl(instance<SqliteDatabase>().getDatabase()) }
+    single<FavoriteLocalDataSource> { FavoriteLocalDataSourceImpl(get<SqliteDatabase>().getDatabase()) }
+    single<RatingScoreLocalDataSource> { RatingScoreLocalDataSourceImpl(get<SqliteDatabase>().getDatabase()) }
+    single<AuthLocalDataSource> { AuthLocalDataSourceImpl(get<SqliteDatabase>().getDatabase()) }
 
-    bindSingleton<UserLocalDataSource> { UserLocalDataSourceImpl() }
-    bindSingleton<CategoryLocalDataSource> { CategoryLocalDataSourceImpl() }
-    bindSingleton<FoodLocalDataSource> { FoodLocalDataSourceImpl() }
-    bindSingleton<FoodAndCategoryLocalDataSource> { FoodAndCategoryLocalDataSourceImpl() }
+    single<UserLocalDataSource> { UserLocalDataSourceImpl() }
+    single<CategoryLocalDataSource> { CategoryLocalDataSourceImpl() }
+    single<FoodLocalDataSource> { FoodLocalDataSourceImpl() }
+    single<FoodAndCategoryLocalDataSource> { FoodAndCategoryLocalDataSourceImpl() }
 }

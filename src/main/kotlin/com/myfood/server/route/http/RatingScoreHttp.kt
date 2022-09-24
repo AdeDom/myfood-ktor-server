@@ -12,16 +12,13 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import org.kodein.di.instance
-import org.kodein.di.ktor.closestDI
+import org.koin.ktor.ext.inject
 
 fun Route.ratingScoreRoute() {
 
+    val getRatingScoreAllUseCase by inject<GetRatingScoreAllUseCase>()
     get("/api/rating/getRatingScoreAll") {
-        val getRatingScoreAllUseCase by closestDI().instance<GetRatingScoreAllUseCase>()
-
-        val resource = getRatingScoreAllUseCase()
-        when (resource) {
+        when (val resource = getRatingScoreAllUseCase()) {
             is Resource.Success -> {
                 call.respond(HttpStatusCode.OK, resource.data)
             }
@@ -32,13 +29,11 @@ fun Route.ratingScoreRoute() {
         }
     }
 
+    val myRatingScoreUseCase by inject<MyRatingScoreUseCase>()
     post("/api/rating/myRatingScore") {
-        val myRatingScoreUseCase by closestDI().instance<MyRatingScoreUseCase>()
-
         val authKey = call.request.header(RequestKeyConstant.AUTHORIZATION_KEY)
         val myRatingScoreRequest = call.receive<MyRatingScoreRequest>()
-        val resource = myRatingScoreUseCase(authKey, myRatingScoreRequest)
-        when (resource) {
+        when (val resource = myRatingScoreUseCase(authKey, myRatingScoreRequest)) {
             is Resource.Success -> {
                 call.respond(HttpStatusCode.OK, resource.data)
             }
@@ -49,11 +44,9 @@ fun Route.ratingScoreRoute() {
         }
     }
 
+    val deleteRatingScoreAllUseCase by inject<DeleteRatingScoreAllUseCase>()
     delete("/api/rating/deleteAll") {
-        val deleteRatingScoreAllUseCase by closestDI().instance<DeleteRatingScoreAllUseCase>()
-
-        val resource = deleteRatingScoreAllUseCase()
-        when (resource) {
+        when (val resource = deleteRatingScoreAllUseCase()) {
             is Resource.Success -> {
                 call.respond(HttpStatusCode.OK, resource.data)
             }
@@ -64,11 +57,9 @@ fun Route.ratingScoreRoute() {
         }
     }
 
+    val syncDataRatingScoreUseCase by inject<SyncDataRatingScoreUseCase>()
     post("/api/rating/syncDataRatingScore") {
-        val syncDataRatingScoreUseCase by closestDI().instance<SyncDataRatingScoreUseCase>()
-
-        val resource = syncDataRatingScoreUseCase()
-        when (resource) {
+        when (val resource = syncDataRatingScoreUseCase()) {
             is Resource.Success -> {
                 call.respond(HttpStatusCode.OK, resource.data)
             }
