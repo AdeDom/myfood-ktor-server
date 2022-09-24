@@ -15,12 +15,16 @@ import com.myfood.server.usecase.rating_score.DeleteRatingScoreAllUseCase
 import com.myfood.server.usecase.rating_score.GetRatingScoreAllUseCase
 import com.myfood.server.usecase.rating_score.MyRatingScoreUseCase
 import com.myfood.server.usecase.rating_score.SyncDataRatingScoreUseCase
+import com.myfood.server.usecase.validate.ValidateEmailUseCase
+import com.myfood.server.usecase.validate.ValidatePasswordUseCase
 import org.koin.dsl.module
 
 internal val domainModule = module {
 
     single { MyFoodUseCase(get()) }
-    single { LoginUseCase(get()) }
+    single { ValidateEmailUseCase() }
+    single { ValidatePasswordUseCase() }
+    single { LoginUseCase(get(), get(), get()) }
     single { RegisterUseCase(get()) }
     single { RefreshTokenUseCase(get(), get()) }
     single { DeleteAccountUseCase(get()) }
