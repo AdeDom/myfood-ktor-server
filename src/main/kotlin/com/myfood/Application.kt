@@ -1,11 +1,15 @@
 package com.myfood
 
-import io.ktor.server.engine.*
-import io.ktor.server.netty.*
-import com.myfood.plugins.*
+import com.myfood.server.plugins.*
+import io.ktor.server.application.*
 
-fun main() {
-    embeddedServer(Netty, port = 8080, host = "0.0.0.0") {
-        configureRouting()
-    }.start(wait = true)
+fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
+
+fun Application.module() {
+    configureDefaultHeaders()
+    configureCallLogging()
+    configureContentNegotiation()
+    configureWebSockets()
+    configureKodein()
+    configureRouting()
 }
