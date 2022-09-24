@@ -2,7 +2,7 @@ package com.myfood.server.data.resouce.local.rating_score
 
 import com.myfood.server.data.models.entities.RatingScoreEntity
 
-interface RatingScoreLocalDataSource {
+internal interface RatingScoreLocalDataSource {
 
     suspend fun getRatingScoreAll(): List<RatingScoreEntity>
 

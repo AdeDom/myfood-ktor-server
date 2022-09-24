@@ -7,7 +7,7 @@ import com.myfood.server.data.repositories.Resource
 import com.myfood.server.data.repositories.category.CategoryRepository
 import com.myfood.server.data.repositories.food.FoodRepository
 
-class InsertFoodUseCase(
+internal class InsertFoodUseCase(
     private val categoryRepository: CategoryRepository,
     private val foodRepository: FoodRepository,
 ) {

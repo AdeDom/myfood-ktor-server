@@ -1,6 +1,6 @@
 package com.myfood.server.data.models.entities
 
-data class FavoriteEntity(
+internal data class FavoriteEntity(
     val favoriteId: String,
     val userId: String,
     val foodId: Int,

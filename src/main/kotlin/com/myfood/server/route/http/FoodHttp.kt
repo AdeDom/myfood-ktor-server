@@ -10,7 +10,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 
-fun Route.foodRoute() {
+internal fun Route.foodRoute() {
 
     val myFoodUseCase by inject<MyFoodUseCase>()
     get("/api/my/food") {

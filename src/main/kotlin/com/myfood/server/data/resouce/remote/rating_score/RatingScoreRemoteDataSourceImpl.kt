@@ -11,7 +11,7 @@ import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransacti
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 
-class RatingScoreRemoteDataSourceImpl(
+internal class RatingScoreRemoteDataSourceImpl(
     private val db: Database
 ) : RatingScoreRemoteDataSource {
 

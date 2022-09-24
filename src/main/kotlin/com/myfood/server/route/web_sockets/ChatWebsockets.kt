@@ -6,7 +6,7 @@ import io.ktor.websocket.*
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 
-fun Route.chatWebSocketsRoute() {
+internal fun Route.chatWebSocketsRoute() {
 
     val connections = Collections.synchronizedSet<Connection?>(LinkedHashSet())
     webSocket("/chat") {

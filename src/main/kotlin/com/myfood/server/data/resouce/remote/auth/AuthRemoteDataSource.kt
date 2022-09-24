@@ -3,7 +3,7 @@ package com.myfood.server.data.resouce.remote.auth
 import com.myfood.server.data.models.entities.AuthEntity
 import com.myfood.server.data.models.request.RegisterRequest
 
-interface AuthRemoteDataSource {
+internal interface AuthRemoteDataSource {
 
     suspend fun findUserIdByEmailAndPassword(email: String, password: String, status: String): String?
 

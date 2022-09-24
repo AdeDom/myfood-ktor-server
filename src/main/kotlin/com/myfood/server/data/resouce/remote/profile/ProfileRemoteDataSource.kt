@@ -3,7 +3,7 @@ package com.myfood.server.data.resouce.remote.profile
 import com.myfood.server.data.models.entities.UserEntity
 import com.myfood.server.data.models.request.ChangeProfileRequest
 
-interface ProfileRemoteDataSource {
+internal interface ProfileRemoteDataSource {
 
     suspend fun getUserByUserId(userId: String): UserEntity?
 

@@ -5,7 +5,7 @@ import com.myfood.server.data.models.response.FavoriteResponse
 import com.myfood.server.data.repositories.Resource
 import com.myfood.server.data.repositories.favorite.FavoriteRepository
 
-class GetFavoriteAllUseCase(
+internal class GetFavoriteAllUseCase(
     private val favoriteRepository: FavoriteRepository,
 ) {
 

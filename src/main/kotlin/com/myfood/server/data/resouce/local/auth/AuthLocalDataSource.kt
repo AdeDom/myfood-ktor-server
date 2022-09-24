@@ -2,7 +2,7 @@ package com.myfood.server.data.resouce.local.auth
 
 import com.myfood.server.data.models.entities.AuthEntity
 
-interface AuthLocalDataSource {
+internal interface AuthLocalDataSource {
 
     suspend fun insertAuth(
         authId: String,

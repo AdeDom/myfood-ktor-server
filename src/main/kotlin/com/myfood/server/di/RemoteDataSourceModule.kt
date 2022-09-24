@@ -19,7 +19,7 @@ import com.myfood.server.data.resouce.remote.user.UserRemoteDataSource
 import com.myfood.server.data.resouce.remote.user.UserRemoteDataSourceImpl
 import org.koin.dsl.module
 
-val remoteDataSourceModule = module {
+internal val remoteDataSourceModule = module {
 
     single<UserRemoteDataSource> { UserRemoteDataSourceImpl(get<MySqlDatabase>().getDatabase()) }
     single<MyFoodRemoteDataSource> { MyFoodRemoteDataSourceImpl(get<MySqlDatabase>().getDatabase()) }

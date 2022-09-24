@@ -5,7 +5,7 @@ import com.myfood.server.data.models.response.RatingScoreResponse
 import com.myfood.server.data.repositories.Resource
 import com.myfood.server.data.repositories.rating_score.RatingScoreRepository
 
-class GetRatingScoreAllUseCase(
+internal class GetRatingScoreAllUseCase(
     private val ratingScoreRepository: RatingScoreRepository,
 ) {
 

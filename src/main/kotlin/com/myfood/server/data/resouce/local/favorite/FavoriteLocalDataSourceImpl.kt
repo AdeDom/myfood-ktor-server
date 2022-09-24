@@ -7,7 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 
-class FavoriteLocalDataSourceImpl(
+internal class FavoriteLocalDataSourceImpl(
     private val db: Database
 ) : FavoriteLocalDataSource {
 

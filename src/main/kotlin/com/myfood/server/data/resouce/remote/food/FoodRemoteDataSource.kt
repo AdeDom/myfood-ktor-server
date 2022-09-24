@@ -4,7 +4,7 @@ import com.myfood.server.data.models.entities.FoodAndCategoryEntity
 import com.myfood.server.data.models.entities.FoodEntity
 import com.myfood.server.data.models.request.InsertFoodRequest
 
-interface FoodRemoteDataSource {
+internal interface FoodRemoteDataSource {
 
     suspend fun insertFood(insertFoodRequest: InsertFoodRequest, status: String): Int?
 

@@ -5,7 +5,7 @@ import com.myfood.server.data.models.request.RegisterRequest
 import com.myfood.server.data.models.response.TokenResponse
 import com.myfood.server.data.repositories.Resource
 
-interface AuthRepository {
+internal interface AuthRepository {
 
     suspend fun login(email: String, password: String): Resource<BaseResponse<TokenResponse>>
 

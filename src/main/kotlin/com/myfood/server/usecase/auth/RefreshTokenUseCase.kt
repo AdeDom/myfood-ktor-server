@@ -9,7 +9,7 @@ import com.myfood.server.data.repositories.Resource
 import com.myfood.server.data.repositories.auth.AuthRepository
 import com.myfood.server.utility.jwt.JwtHelper
 
-class RefreshTokenUseCase(
+internal class RefreshTokenUseCase(
     private val jwtHelper: JwtHelper,
     private val authRepository: AuthRepository,
 ) {

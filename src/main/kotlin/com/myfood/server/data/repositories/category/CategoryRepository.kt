@@ -5,7 +5,7 @@ import com.myfood.server.data.models.request.InsertCategoryRequest
 import com.myfood.server.data.models.response.CategoryResponse
 import com.myfood.server.data.repositories.Resource
 
-interface CategoryRepository {
+internal interface CategoryRepository {
 
     suspend fun findCategoryId(categoryId: Int): Long
 

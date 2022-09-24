@@ -5,7 +5,7 @@ import com.myfood.server.data.models.base.BaseResponse
 import com.myfood.server.data.repositories.Resource
 import com.myfood.server.data.repositories.profile.ProfileRepository
 
-class DeleteAccountUseCase(
+internal class DeleteAccountUseCase(
     private val profileRepository: ProfileRepository,
 ) {
 

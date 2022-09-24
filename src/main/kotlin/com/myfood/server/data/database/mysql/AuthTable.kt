@@ -3,7 +3,7 @@ package com.myfood.server.data.database.mysql
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.jodatime.datetime
 
-object AuthTable : Table(name = "auth") {
+internal object AuthTable : Table(name = "auth") {
 
     val authId = varchar(name = "auth_id", length = 50)
     val accessToken = varchar(name = "access_token", length = 500)

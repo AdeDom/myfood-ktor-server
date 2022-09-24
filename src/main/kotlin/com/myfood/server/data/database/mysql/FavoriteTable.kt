@@ -3,7 +3,7 @@ package com.myfood.server.data.database.mysql
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.jodatime.datetime
 
-object FavoriteTable : Table(name = "favorite") {
+internal object FavoriteTable : Table(name = "favorite") {
 
     val favoriteId = varchar(name = "favorite_id", length = 50)
     val userId = varchar(name = "user_id", length = 50).references(UserTable.userId)

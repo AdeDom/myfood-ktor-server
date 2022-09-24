@@ -4,7 +4,7 @@ import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import org.jetbrains.exposed.sql.Database
 
-class MySqlDatabaseImpl(
+internal class MySqlDatabaseImpl(
     private val usernameSecret: String,
     private val passwordSecret: String,
     private val jdbcUrlSecret: String,

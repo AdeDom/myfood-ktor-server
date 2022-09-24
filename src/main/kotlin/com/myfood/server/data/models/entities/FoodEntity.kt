@@ -2,7 +2,7 @@ package com.myfood.server.data.models.entities
 
 import org.joda.time.DateTime
 
-data class FoodEntity(
+internal data class FoodEntity(
     val foodId: Int,
     val foodName: String,
     val alias: String?,

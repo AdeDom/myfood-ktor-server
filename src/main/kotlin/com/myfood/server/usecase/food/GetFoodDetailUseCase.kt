@@ -6,7 +6,7 @@ import com.myfood.server.data.models.response.FoodDetailResponse
 import com.myfood.server.data.repositories.Resource
 import com.myfood.server.data.repositories.food.FoodRepository
 
-class GetFoodDetailUseCase(
+internal class GetFoodDetailUseCase(
     private val foodRepository: FoodRepository,
 ) {
 

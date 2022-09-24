@@ -3,7 +3,7 @@ package com.myfood.server.data.database.mysql
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.jodatime.datetime
 
-object FoodTable : Table(name = "food") {
+internal object FoodTable : Table(name = "food") {
 
     val foodId = integer(name = "food_id").autoIncrement()
     val foodName = varchar(name = "food_name", length = 100)

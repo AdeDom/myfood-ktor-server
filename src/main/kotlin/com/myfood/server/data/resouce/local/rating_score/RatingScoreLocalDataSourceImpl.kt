@@ -7,7 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 
-class RatingScoreLocalDataSourceImpl(
+internal class RatingScoreLocalDataSourceImpl(
     private val db: Database
 ) : RatingScoreLocalDataSource {
 

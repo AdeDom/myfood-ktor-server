@@ -2,7 +2,7 @@ package com.myfood.server.data.resouce.local.user
 
 import com.myfood.server.data.models.entities.UserEntity
 
-interface UserLocalDataSource {
+internal interface UserLocalDataSource {
 
     suspend fun getUserByUserId(userId: String): UserEntity?
 

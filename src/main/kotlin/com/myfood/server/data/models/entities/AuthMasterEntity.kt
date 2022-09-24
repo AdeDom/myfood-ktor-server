@@ -1,6 +1,6 @@
 package com.myfood.server.data.models.entities
 
-data class AuthMasterEntity(
+internal data class AuthMasterEntity(
     val authId: String,
     val userId: String,
     val status: String,

@@ -2,7 +2,7 @@ package com.myfood.server.data.resouce.local.user
 
 import com.myfood.server.data.models.entities.UserEntity
 
-class UserLocalDataSourceImpl : UserLocalDataSource {
+internal class UserLocalDataSourceImpl : UserLocalDataSource {
 
     private val userList = mutableListOf<UserEntity>()
 

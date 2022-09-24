@@ -17,7 +17,7 @@ import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.util.*
 
-class AuthRepositoryImpl(
+internal class AuthRepositoryImpl(
     private val jwtHelper: JwtHelper,
     private val authLocalDataSource: AuthLocalDataSource,
     private val authRemoteDataSource: AuthRemoteDataSource,

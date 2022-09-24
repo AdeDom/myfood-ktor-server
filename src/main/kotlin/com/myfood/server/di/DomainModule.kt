@@ -17,7 +17,7 @@ import com.myfood.server.usecase.rating_score.MyRatingScoreUseCase
 import com.myfood.server.usecase.rating_score.SyncDataRatingScoreUseCase
 import org.koin.dsl.module
 
-val domainModule = module {
+internal val domainModule = module {
 
     single { MyFoodUseCase(get()) }
     single { LoginUseCase(get()) }

@@ -5,7 +5,7 @@ import com.myfood.server.data.models.response.FavoriteResponse
 import com.myfood.server.data.models.web_sockets.FavoriteWebSocketsResponse
 import com.myfood.server.data.repositories.Resource
 
-interface FavoriteRepository {
+internal interface FavoriteRepository {
 
     suspend fun getFavoriteAll(): Resource<BaseResponse<List<FavoriteResponse>>>
 

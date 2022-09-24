@@ -14,7 +14,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 
-fun Route.favoriteRoute() {
+internal fun Route.favoriteRoute() {
 
     val getFavoriteAllUseCase by inject<GetFavoriteAllUseCase>()
     get("/api/favorite/getFavoriteAll") {

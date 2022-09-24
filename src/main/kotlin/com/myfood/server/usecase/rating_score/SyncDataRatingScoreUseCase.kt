@@ -4,7 +4,7 @@ import com.myfood.server.data.models.base.BaseResponse
 import com.myfood.server.data.repositories.Resource
 import com.myfood.server.data.repositories.rating_score.RatingScoreRepository
 
-class SyncDataRatingScoreUseCase(
+internal class SyncDataRatingScoreUseCase(
     private val ratingScoreRepository: RatingScoreRepository,
 ) {
 

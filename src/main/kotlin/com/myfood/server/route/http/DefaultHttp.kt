@@ -9,7 +9,7 @@ import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Route.defaultRoute() {
+internal fun Route.defaultRoute() {
 
     get("/") {
         val messageString = "Welcome to my food."

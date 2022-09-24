@@ -2,7 +2,7 @@ package com.myfood.server.data.database.sqlite
 
 import org.jetbrains.exposed.sql.Table
 
-object FavoriteTableSqlite : Table(name = "favorite") {
+internal object FavoriteTableSqlite : Table(name = "favorite") {
 
     val favoriteId = text(name = "favorite_id")
     val userId = text(name = "user_id")

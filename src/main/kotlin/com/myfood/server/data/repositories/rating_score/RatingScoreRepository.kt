@@ -5,7 +5,7 @@ import com.myfood.server.data.models.response.RatingScoreResponse
 import com.myfood.server.data.models.web_sockets.RatingScoreWebSocketsResponse
 import com.myfood.server.data.repositories.Resource
 
-interface RatingScoreRepository {
+internal interface RatingScoreRepository {
 
     suspend fun getRatingScoreAll(): Resource<BaseResponse<List<RatingScoreResponse>>>
 

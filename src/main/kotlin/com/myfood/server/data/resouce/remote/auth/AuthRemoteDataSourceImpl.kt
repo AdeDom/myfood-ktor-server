@@ -11,7 +11,7 @@ import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransacti
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 
-class AuthRemoteDataSourceImpl(
+internal class AuthRemoteDataSourceImpl(
     private val db: Database,
 ) : AuthRemoteDataSource {
 

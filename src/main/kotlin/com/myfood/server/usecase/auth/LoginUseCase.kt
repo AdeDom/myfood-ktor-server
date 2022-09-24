@@ -7,7 +7,7 @@ import com.myfood.server.data.models.response.TokenResponse
 import com.myfood.server.data.repositories.Resource
 import com.myfood.server.data.repositories.auth.AuthRepository
 
-class LoginUseCase(
+internal class LoginUseCase(
     private val authRepository: AuthRepository,
 ) {
 

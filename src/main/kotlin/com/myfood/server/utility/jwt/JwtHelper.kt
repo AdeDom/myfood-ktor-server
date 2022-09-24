@@ -5,7 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.impl.PublicClaims
 import java.util.*
 
-class JwtHelper(
+internal class JwtHelper(
     private val secret: String,
     private val issuer: String,
     private val audience: String,

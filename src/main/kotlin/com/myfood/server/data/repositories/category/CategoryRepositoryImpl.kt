@@ -10,7 +10,7 @@ import com.myfood.server.data.resouce.remote.category.CategoryRemoteDataSource
 import com.myfood.server.utility.constant.AppConstant
 import com.myfood.server.utility.constant.ResponseKeyConstant
 
-class CategoryRepositoryImpl(
+internal class CategoryRepositoryImpl(
     private val categoryLocalDataSource: CategoryLocalDataSource,
     private val categoryRemoteDataSource: CategoryRemoteDataSource,
 ) : CategoryRepository {

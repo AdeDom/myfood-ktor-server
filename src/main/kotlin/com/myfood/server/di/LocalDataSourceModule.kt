@@ -17,7 +17,7 @@ import com.myfood.server.data.resouce.local.user.UserLocalDataSource
 import com.myfood.server.data.resouce.local.user.UserLocalDataSourceImpl
 import org.koin.dsl.module
 
-val localDataSourceModule = module {
+internal val localDataSourceModule = module {
 
     single<FavoriteLocalDataSource> { FavoriteLocalDataSourceImpl(get<SqliteDatabase>().getDatabase()) }
     single<RatingScoreLocalDataSource> { RatingScoreLocalDataSourceImpl(get<SqliteDatabase>().getDatabase()) }

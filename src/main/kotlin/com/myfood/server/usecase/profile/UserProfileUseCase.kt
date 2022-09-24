@@ -6,7 +6,7 @@ import com.myfood.server.data.models.response.UserProfileResponse
 import com.myfood.server.data.repositories.Resource
 import com.myfood.server.data.repositories.profile.ProfileRepository
 
-class UserProfileUseCase(
+internal class UserProfileUseCase(
     private val profileRepository: ProfileRepository,
 ) {
 

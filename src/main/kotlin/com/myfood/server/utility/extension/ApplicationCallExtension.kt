@@ -6,7 +6,7 @@ import com.myfood.server.utility.jwt.JwtHelper
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 
-val ApplicationCall.userId: String?
+internal val ApplicationCall.userId: String?
     get() = run {
         val authKey = request.header(RequestKeyConstant.AUTHORIZATION_KEY)
         val accessToken = authKey?.replace("Bearer", "")?.trim()

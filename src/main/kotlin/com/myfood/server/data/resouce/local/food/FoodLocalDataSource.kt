@@ -2,7 +2,7 @@ package com.myfood.server.data.resouce.local.food
 
 import com.myfood.server.data.models.entities.FoodEntity
 
-interface FoodLocalDataSource {
+internal interface FoodLocalDataSource {
 
     suspend fun getFoodDetail(foodId: Int): FoodEntity?
 

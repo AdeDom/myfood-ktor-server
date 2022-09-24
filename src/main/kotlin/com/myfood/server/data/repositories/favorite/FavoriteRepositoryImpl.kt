@@ -12,7 +12,7 @@ import com.myfood.server.utility.constant.ResponseKeyConstant
 import org.joda.time.DateTime
 import java.util.*
 
-class FavoriteRepositoryImpl(
+internal class FavoriteRepositoryImpl(
     private val favoriteLocalDataSource: FavoriteLocalDataSource,
     private val favoriteRemoteDataSource: FavoriteRemoteDataSource,
 ) : FavoriteRepository {

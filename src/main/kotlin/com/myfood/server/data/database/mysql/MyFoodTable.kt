@@ -2,7 +2,7 @@ package com.myfood.server.data.database.mysql
 
 import org.jetbrains.exposed.sql.Table
 
-object MyFoodTable : Table(name = "my_food") {
+internal object MyFoodTable : Table(name = "my_food") {
 
     val id = integer(name = "id").autoIncrement()
     val foodDefault = varchar(name = "food_default", length = 200)

@@ -2,7 +2,7 @@ package com.myfood.server.data.resouce.local.food_and_category
 
 import com.myfood.server.data.models.entities.FoodAndCategoryEntity
 
-class FoodAndCategoryLocalDataSourceImpl : FoodAndCategoryLocalDataSource {
+internal class FoodAndCategoryLocalDataSourceImpl : FoodAndCategoryLocalDataSource {
 
     private val foodAndCategoryList = mutableListOf<FoodAndCategoryEntity>()
 

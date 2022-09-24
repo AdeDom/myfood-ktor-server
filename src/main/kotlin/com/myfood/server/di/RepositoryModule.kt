@@ -14,7 +14,7 @@ import com.myfood.server.data.repositories.rating_score.RatingScoreRepository
 import com.myfood.server.data.repositories.rating_score.RatingScoreRepositoryImpl
 import org.koin.dsl.module
 
-val repositoryModule = module {
+internal val repositoryModule = module {
 
     single<FoodRepository> { FoodRepositoryImpl(get(), get(), get(), get(), get(), get()) }
     single<AuthRepository> { AuthRepositoryImpl(get(), get(), get()) }

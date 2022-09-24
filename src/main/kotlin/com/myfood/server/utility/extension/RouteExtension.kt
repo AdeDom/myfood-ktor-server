@@ -15,35 +15,35 @@ import io.ktor.util.*
 import io.ktor.util.pipeline.*
 
 @KtorDsl
-fun Route.getAuth(path: String, body: PipelineInterceptor<Unit, ApplicationCall>) {
+internal fun Route.getAuth(path: String, body: PipelineInterceptor<Unit, ApplicationCall>) {
     get(path) {
         authentication(body)
     }
 }
 
 @KtorDsl
-fun Route.postAuth(path: String, body: PipelineInterceptor<Unit, ApplicationCall>) {
+internal fun Route.postAuth(path: String, body: PipelineInterceptor<Unit, ApplicationCall>) {
     post(path) {
         authentication(body)
     }
 }
 
 @KtorDsl
-fun Route.putAuth(path: String, body: PipelineInterceptor<Unit, ApplicationCall>) {
+internal fun Route.putAuth(path: String, body: PipelineInterceptor<Unit, ApplicationCall>) {
     put(path) {
         authentication(body)
     }
 }
 
 @KtorDsl
-fun Route.patchAuth(path: String, body: PipelineInterceptor<Unit, ApplicationCall>) {
+internal fun Route.patchAuth(path: String, body: PipelineInterceptor<Unit, ApplicationCall>) {
     patch(path) {
         authentication(body)
     }
 }
 
 @KtorDsl
-fun Route.deleteAuth(path: String, body: PipelineInterceptor<Unit, ApplicationCall>) {
+internal fun Route.deleteAuth(path: String, body: PipelineInterceptor<Unit, ApplicationCall>) {
     delete(path) {
         authentication(body)
     }

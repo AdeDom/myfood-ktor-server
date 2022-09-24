@@ -2,7 +2,7 @@ package com.myfood.server.data.resouce.remote.favorite
 
 import com.myfood.server.data.models.entities.FavoriteEntity
 
-interface FavoriteRemoteDataSource {
+internal interface FavoriteRemoteDataSource {
 
     suspend fun replaceFavoriteAll(favoriteList: List<FavoriteEntity>): Int
 

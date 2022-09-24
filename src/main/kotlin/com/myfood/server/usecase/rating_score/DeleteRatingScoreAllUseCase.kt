@@ -4,7 +4,7 @@ import com.myfood.server.data.models.base.BaseResponse
 import com.myfood.server.data.repositories.Resource
 import com.myfood.server.data.repositories.rating_score.RatingScoreRepository
 
-class DeleteRatingScoreAllUseCase(
+internal class DeleteRatingScoreAllUseCase(
     private val ratingScoreRepository: RatingScoreRepository,
 ) {
 

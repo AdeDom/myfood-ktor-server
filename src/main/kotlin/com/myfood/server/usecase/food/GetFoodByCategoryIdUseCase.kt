@@ -8,7 +8,7 @@ import com.myfood.server.data.repositories.category.CategoryRepository
 import com.myfood.server.data.repositories.food.FoodRepository
 import com.myfood.server.utility.constant.ResponseKeyConstant
 
-class GetFoodByCategoryIdUseCase(
+internal class GetFoodByCategoryIdUseCase(
     private val categoryRepository: CategoryRepository,
     private val foodRepository: FoodRepository,
 ) {

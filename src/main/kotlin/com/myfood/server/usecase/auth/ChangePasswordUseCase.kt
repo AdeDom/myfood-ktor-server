@@ -6,7 +6,7 @@ import com.myfood.server.data.models.request.ChangePasswordRequest
 import com.myfood.server.data.repositories.Resource
 import com.myfood.server.data.repositories.auth.AuthRepository
 
-class ChangePasswordUseCase(
+internal class ChangePasswordUseCase(
     private val authRepository: AuthRepository,
 ) {
 

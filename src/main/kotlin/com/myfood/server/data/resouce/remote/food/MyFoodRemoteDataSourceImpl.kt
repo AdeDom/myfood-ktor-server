@@ -7,7 +7,7 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 
-class MyFoodRemoteDataSourceImpl(
+internal class MyFoodRemoteDataSourceImpl(
     private val db: Database,
 ) : MyFoodRemoteDataSource {
 

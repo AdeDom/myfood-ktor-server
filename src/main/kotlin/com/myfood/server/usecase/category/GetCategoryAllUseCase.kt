@@ -5,7 +5,7 @@ import com.myfood.server.data.models.response.CategoryResponse
 import com.myfood.server.data.repositories.Resource
 import com.myfood.server.data.repositories.category.CategoryRepository
 
-class GetCategoryAllUseCase(
+internal class GetCategoryAllUseCase(
     private val categoryRepository: CategoryRepository,
 ) {
 

@@ -6,7 +6,7 @@ import com.myfood.server.data.models.request.InsertCategoryRequest
 import com.myfood.server.data.repositories.Resource
 import com.myfood.server.data.repositories.category.CategoryRepository
 
-class InsertCategoryUseCase(
+internal class InsertCategoryUseCase(
     private val categoryRepository: CategoryRepository,
 ) {
 

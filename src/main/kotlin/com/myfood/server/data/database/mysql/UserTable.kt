@@ -3,7 +3,7 @@ package com.myfood.server.data.database.mysql
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.jodatime.datetime
 
-object UserTable : Table("user") {
+internal object UserTable : Table("user") {
 
     val userId = varchar(name = "user_id", length = 50)
     val email = varchar(name = "email", length = 150)

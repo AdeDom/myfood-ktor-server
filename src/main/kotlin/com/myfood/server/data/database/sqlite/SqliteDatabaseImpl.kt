@@ -4,7 +4,7 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.transactions.TransactionManager
 import java.sql.Connection
 
-class SqliteDatabaseImpl : SqliteDatabase {
+internal class SqliteDatabaseImpl : SqliteDatabase {
 
     private val database: Database = Database.connect("jdbc:sqlite:./data/my_food.db", "org.sqlite.JDBC")
 

@@ -8,7 +8,7 @@ import com.myfood.server.data.repositories.Resource
 import com.myfood.server.data.repositories.rating_score.RatingScoreRepository
 import com.myfood.server.usecase.auth.TokenUseCase
 
-class MyRatingScoreUseCase(
+internal class MyRatingScoreUseCase(
     private val tokenUseCase: TokenUseCase,
     private val ratingScoreRepository: RatingScoreRepository,
 ) {

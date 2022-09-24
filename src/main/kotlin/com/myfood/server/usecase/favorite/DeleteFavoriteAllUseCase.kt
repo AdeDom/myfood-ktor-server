@@ -4,7 +4,7 @@ import com.myfood.server.data.models.base.BaseResponse
 import com.myfood.server.data.repositories.Resource
 import com.myfood.server.data.repositories.favorite.FavoriteRepository
 
-class DeleteFavoriteAllUseCase(
+internal class DeleteFavoriteAllUseCase(
     private val favoriteRepository: FavoriteRepository,
 ) {
 

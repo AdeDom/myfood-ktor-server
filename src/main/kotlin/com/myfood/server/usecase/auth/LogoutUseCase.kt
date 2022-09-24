@@ -5,7 +5,7 @@ import com.myfood.server.data.models.base.BaseResponse
 import com.myfood.server.data.repositories.Resource
 import com.myfood.server.data.repositories.auth.AuthRepository
 
-class LogoutUseCase(
+internal class LogoutUseCase(
     private val authRepository: AuthRepository,
 ) {
 

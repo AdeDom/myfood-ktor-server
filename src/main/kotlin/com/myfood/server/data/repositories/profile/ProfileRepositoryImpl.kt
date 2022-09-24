@@ -15,7 +15,7 @@ import com.myfood.server.utility.constant.AppConstant
 import com.myfood.server.utility.constant.ResponseKeyConstant
 import com.myfood.server.utility.jwt.JwtHelper
 
-class ProfileRepositoryImpl(
+internal class ProfileRepositoryImpl(
     private val jwtHelper: JwtHelper,
     private val userLocalDataSource: UserLocalDataSource,
     private val authLocalDataSource: AuthLocalDataSource,

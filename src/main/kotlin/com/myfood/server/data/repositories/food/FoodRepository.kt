@@ -7,7 +7,7 @@ import com.myfood.server.data.models.response.FoodAndCategoryResponse
 import com.myfood.server.data.models.response.FoodDetailResponse
 import com.myfood.server.data.repositories.Resource
 
-interface FoodRepository {
+internal interface FoodRepository {
 
     suspend fun getMyFood(): Resource<BaseResponse<List<MyFoodEntity>>>
 

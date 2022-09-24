@@ -8,7 +8,7 @@ import com.myfood.server.data.repositories.Resource
 import com.myfood.server.data.repositories.favorite.FavoriteRepository
 import com.myfood.server.usecase.auth.TokenUseCase
 
-class MyFavoriteUseCase(
+internal class MyFavoriteUseCase(
     private val tokenUseCase: TokenUseCase,
     private val favoriteRepository: FavoriteRepository,
 ) {

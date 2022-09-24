@@ -2,7 +2,7 @@ package com.myfood.server.data.database.sqlite
 
 import org.jetbrains.exposed.sql.Table
 
-object AuthTableSqlite : Table(name = "auth") {
+internal object AuthTableSqlite : Table(name = "auth") {
 
     val authId = text(name = "auth_id")
     val accessToken = text(name = "access_token")

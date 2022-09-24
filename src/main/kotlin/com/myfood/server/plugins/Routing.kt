@@ -7,7 +7,7 @@ import com.myfood.server.route.web_sockets.ratingScoreWebSocketsRoute
 import io.ktor.server.application.*
 import io.ktor.server.routing.*
 
-fun Application.configureRouting() {
+internal fun Application.configureRouting() {
     install(Routing) {
         defaultRoute()
         authRoute()

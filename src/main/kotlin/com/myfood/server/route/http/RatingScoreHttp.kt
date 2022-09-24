@@ -14,7 +14,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 
-fun Route.ratingScoreRoute() {
+internal fun Route.ratingScoreRoute() {
 
     val getRatingScoreAllUseCase by inject<GetRatingScoreAllUseCase>()
     get("/api/rating/getRatingScoreAll") {

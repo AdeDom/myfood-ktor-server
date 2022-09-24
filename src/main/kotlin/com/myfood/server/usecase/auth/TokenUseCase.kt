@@ -7,7 +7,7 @@ import com.myfood.server.data.models.base.ErrorResponse
 import com.myfood.server.data.repositories.auth.AuthRepository
 import com.myfood.server.utility.jwt.JwtHelper
 
-class TokenUseCase(
+internal class TokenUseCase(
     private val authRepository: AuthRepository,
 ) {
 

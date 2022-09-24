@@ -19,7 +19,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import java.text.DecimalFormat
 
-class FoodRepositoryImpl(
+internal class FoodRepositoryImpl(
     private val foodLocalDataSource: FoodLocalDataSource,
     private val foodAndCategoryLocalDataSource: FoodAndCategoryLocalDataSource,
     private val favoriteLocalDataSource: FavoriteLocalDataSource,

@@ -2,7 +2,7 @@ package com.myfood.server.data.resouce.local.category
 
 import com.myfood.server.data.models.entities.CategoryEntity
 
-interface CategoryLocalDataSource {
+internal interface CategoryLocalDataSource {
 
     suspend fun getCategoryAll(): List<CategoryEntity>
 

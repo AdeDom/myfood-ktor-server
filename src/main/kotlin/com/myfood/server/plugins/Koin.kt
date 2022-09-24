@@ -14,7 +14,7 @@ import org.koin.dsl.module
 import org.koin.ktor.plugin.Koin
 import org.koin.logger.slf4jLogger
 
-fun Application.configureKoin() {
+internal fun Application.configureKoin() {
     val databaseNameEnv = environment.config.property("my_food_db.database_name").getString()
     val usernameEnv = environment.config.property("my_food_db.username").getString()
     val passwordEnv = environment.config.property("my_food_db.password").getString()

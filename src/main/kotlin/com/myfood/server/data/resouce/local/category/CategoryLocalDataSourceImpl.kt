@@ -3,7 +3,7 @@ package com.myfood.server.data.resouce.local.category
 import com.myfood.server.data.models.entities.CategoryEntity
 import com.myfood.server.utility.constant.AppConstant
 
-class CategoryLocalDataSourceImpl : CategoryLocalDataSource {
+internal class CategoryLocalDataSourceImpl : CategoryLocalDataSource {
 
     private val categoryList = mutableListOf<CategoryEntity>()
 

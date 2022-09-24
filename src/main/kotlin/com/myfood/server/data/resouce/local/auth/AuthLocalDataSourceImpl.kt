@@ -8,7 +8,7 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.joda.time.DateTime
 
-class AuthLocalDataSourceImpl(
+internal class AuthLocalDataSourceImpl(
     private val db: Database,
 ) : AuthLocalDataSource {
 

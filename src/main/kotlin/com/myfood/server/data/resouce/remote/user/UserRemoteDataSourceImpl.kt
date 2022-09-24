@@ -7,7 +7,7 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 
-class UserRemoteDataSourceImpl(
+internal class UserRemoteDataSourceImpl(
     private val db: Database,
 ) : UserRemoteDataSource {
 

@@ -1,6 +1,6 @@
 package com.myfood.server.data.models.entities
 
-data class RatingScoreEntity(
+internal data class RatingScoreEntity(
     val ratingScoreId: String,
     val userId: String,
     val foodId: Int,

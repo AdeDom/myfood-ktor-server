@@ -13,7 +13,7 @@ import org.joda.time.DateTime
 import java.text.DecimalFormat
 import java.util.*
 
-class RatingScoreRepositoryImpl(
+internal class RatingScoreRepositoryImpl(
     private val ratingScoreLocalDataSource: RatingScoreLocalDataSource,
     private val ratingScoreRemoteDataSource: RatingScoreRemoteDataSource,
 ) : RatingScoreRepository {

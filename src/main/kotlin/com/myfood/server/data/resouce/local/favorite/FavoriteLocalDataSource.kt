@@ -2,7 +2,7 @@ package com.myfood.server.data.resouce.local.favorite
 
 import com.myfood.server.data.models.entities.FavoriteEntity
 
-interface FavoriteLocalDataSource {
+internal interface FavoriteLocalDataSource {
 
     suspend fun getFavoriteAll(): List<FavoriteEntity>
 

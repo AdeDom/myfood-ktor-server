@@ -11,7 +11,7 @@ import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransacti
 import org.jetbrains.exposed.sql.update
 import org.joda.time.DateTime
 
-class ProfileRemoteDataSourceImpl(
+internal class ProfileRemoteDataSourceImpl(
     private val db: Database,
 ) : ProfileRemoteDataSource {
 

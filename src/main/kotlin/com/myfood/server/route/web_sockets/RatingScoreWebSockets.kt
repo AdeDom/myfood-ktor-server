@@ -14,7 +14,7 @@ import kotlinx.serialization.json.Json
 import org.koin.ktor.ext.inject
 import java.util.*
 
-fun Route.ratingScoreWebSocketsRoute() {
+internal fun Route.ratingScoreWebSocketsRoute() {
 
     val myRatingScoreUseCase by inject<MyRatingScoreUseCase>()
     val myRatingScoreConnections = Collections.synchronizedSet<DefaultWebSocketSession>(LinkedHashSet())

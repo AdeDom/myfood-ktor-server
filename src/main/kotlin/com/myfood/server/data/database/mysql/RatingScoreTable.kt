@@ -3,7 +3,7 @@ package com.myfood.server.data.database.mysql
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.jodatime.datetime
 
-object RatingScoreTable : Table(name = "rating_score") {
+internal object RatingScoreTable : Table(name = "rating_score") {
 
     val ratingScoreId = varchar(name = "rating_score_id", length = 50)
     val userId = varchar(name = "user_id", length = 50).references(UserTable.userId)

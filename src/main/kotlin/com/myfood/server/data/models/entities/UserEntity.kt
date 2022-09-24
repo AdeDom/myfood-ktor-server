@@ -2,7 +2,7 @@ package com.myfood.server.data.models.entities
 
 import org.joda.time.DateTime
 
-data class UserEntity(
+internal data class UserEntity(
     val userId: String,
     val email: String,
     val password: String,

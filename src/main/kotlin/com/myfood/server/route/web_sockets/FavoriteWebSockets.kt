@@ -14,7 +14,7 @@ import kotlinx.serialization.json.Json
 import org.koin.ktor.ext.inject
 import java.util.*
 
-fun Route.favoriteWebSocketsRoute() {
+internal fun Route.favoriteWebSocketsRoute() {
 
     val myFavoriteUseCase by inject<MyFavoriteUseCase>()
     val myFavoriteConnections = Collections.synchronizedSet<DefaultWebSocketSession>(LinkedHashSet())
