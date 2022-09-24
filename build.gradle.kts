@@ -64,3 +64,7 @@ dependencies {
     implementation("io.ktor:ktor-server-default-headers:$ktor_version")
     implementation("io.ktor:ktor-server-call-logging:$ktor_version")
 }
+
+tasks {
+    create("stage").dependsOn("installDist")
+}

@@ -1,0 +1,1 @@
+web: build/install/com.myfood.myfood-ktor-server/bin/com.myfood.myfood-ktor-server
