@@ -1,37 +1,23 @@
 package com.myfood.server.usecase.food
 
-import com.myfood.server.data.models.base.BaseError
-import com.myfood.server.data.models.base.BaseResponse
 import com.myfood.server.data.models.response.FoodDetailResponse
-import com.myfood.server.data.repositories.Resource
 import com.myfood.server.data.repositories.category.CategoryRepository
 import com.myfood.server.data.repositories.food.FoodRepository
-import com.myfood.server.utility.constant.ResponseKeyConstant
+import com.myfood.server.utility.exception.ApplicationException
 
 internal class GetFoodByCategoryIdUseCase(
     private val categoryRepository: CategoryRepository,
     private val foodRepository: FoodRepository,
 ) {
 
-    suspend operator fun invoke(categoryId: String?): Resource<BaseResponse<List<FoodDetailResponse>>> {
-        val response = BaseResponse<List<FoodDetailResponse>>()
-
+    suspend operator fun invoke(categoryId: String?): List<FoodDetailResponse> {
         return when {
-            categoryId.isNullOrBlank() -> {
-                response.error = BaseError(message = "Category id is null or blank.")
-                Resource.Error(response)
-            }
-
-            categoryId.toIntOrNull() == null -> {
-                response.error = BaseError(message = "Category id is text.")
-                Resource.Error(response)
-            }
-
+            categoryId.isNullOrBlank() -> throw ApplicationException("Category id is null or blank.")
+            categoryId.toIntOrNull() == null -> throw ApplicationException("Category id is text.")
             else -> {
                 val isCategoryTypeRecommend = isCategoryTypeRecommend(categoryId.toInt())
                 if (isCategoryTypeRecommend) {
-                    val getFoodAndCategoryAll = foodRepository.getFoodAndCategoryAll()
-                    val foodListResponse = getFoodAndCategoryAll
+                    return foodRepository.getFoodAndCategoryAll()
                         .asSequence()
                         .filter {
                             (it.favorite ?: 0L) > 0 || (it.ratingScore ?: 0F) > 0
@@ -60,14 +46,8 @@ internal class GetFoodByCategoryIdUseCase(
                             it.favorite
                         }
                         .toList()
-                    response.status = ResponseKeyConstant.SUCCESS
-                    response.result = foodListResponse
-                    return Resource.Success(response)
                 } else {
-                    val foodListResponse = foodRepository.getFoodByCategoryId(categoryId.toInt())
-                    response.status = ResponseKeyConstant.SUCCESS
-                    response.result = foodListResponse
-                    return Resource.Success(response)
+                    return foodRepository.getFoodByCategoryId(categoryId.toInt())
                 }
             }
         }
