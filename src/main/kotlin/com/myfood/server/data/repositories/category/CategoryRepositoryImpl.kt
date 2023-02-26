@@ -1,14 +1,11 @@
 package com.myfood.server.data.repositories.category
 
-import com.myfood.server.data.models.base.BaseError
-import com.myfood.server.data.models.base.BaseResponse
 import com.myfood.server.data.models.request.InsertCategoryRequest
 import com.myfood.server.data.models.response.CategoryResponse
-import com.myfood.server.data.repositories.Resource
 import com.myfood.server.data.resouce.local.category.CategoryLocalDataSource
 import com.myfood.server.data.resouce.remote.category.CategoryRemoteDataSource
 import com.myfood.server.utility.constant.AppConstant
-import com.myfood.server.utility.constant.ResponseKeyConstant
+import com.myfood.server.utility.exception.ApplicationException
 
 internal class CategoryRepositoryImpl(
     private val categoryLocalDataSource: CategoryLocalDataSource,
@@ -19,23 +16,16 @@ internal class CategoryRepositoryImpl(
         return categoryRemoteDataSource.findCategoryId(categoryId)
     }
 
-    override suspend fun insertCategory(insertCategoryRequest: InsertCategoryRequest): Resource<BaseResponse<String>> {
-        val response = BaseResponse<String>()
-
+    override suspend fun insertCategory(insertCategoryRequest: InsertCategoryRequest): String {
         val isInsertCategory = categoryRemoteDataSource.insertCategory(insertCategoryRequest) == 1
         return if (isInsertCategory) {
-            response.status = ResponseKeyConstant.SUCCESS
-            response.result = "Insert category success."
-            Resource.Success(response)
+            "Insert category success."
         } else {
-            response.error = BaseError(message = "Insert category failed.")
-            Resource.Error(response)
+            throw ApplicationException("Insert category failed.")
         }
     }
 
-    override suspend fun getCategoryAll(): Resource<BaseResponse<List<CategoryResponse>>> {
-        val response = BaseResponse<List<CategoryResponse>>()
-
+    override suspend fun getCategoryAll(): List<CategoryResponse> {
         var getCategoryAll = categoryLocalDataSource.getCategoryAll()
         if (getCategoryAll.isEmpty()) {
             getCategoryAll = categoryRemoteDataSource.getCategoryAll()
@@ -47,7 +37,7 @@ internal class CategoryRepositoryImpl(
             }
         }
 
-        val getCategoryAllResponse = getCategoryAll.map { categoryEntity ->
+        return getCategoryAll.map { categoryEntity ->
             CategoryResponse(
                 categoryId = categoryEntity.categoryId,
                 categoryName = categoryEntity.categoryName,
@@ -57,9 +47,6 @@ internal class CategoryRepositoryImpl(
                 updated = categoryEntity.updated?.toString(AppConstant.DATE_TIME_FORMAT_RESPONSE),
             )
         }
-        response.status = ResponseKeyConstant.SUCCESS
-        response.result = getCategoryAllResponse
-        return Resource.Success(response)
     }
 
     override suspend fun findCategoryTypeCountByCategoryIdAndCategoryTypeRecommend(categoryId: Int): Int {

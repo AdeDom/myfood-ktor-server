@@ -1,9 +1,11 @@
 package com.myfood.server.route.http
 
+import com.myfood.server.data.models.base.BaseResponse
 import com.myfood.server.data.models.request.InsertCategoryRequest
-import com.myfood.server.data.repositories.Resource
 import com.myfood.server.usecase.category.GetCategoryAllUseCase
 import com.myfood.server.usecase.category.InsertCategoryUseCase
+import com.myfood.server.utility.constant.ResponseKeyConstant
+import com.myfood.server.utility.exception.ApplicationException
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -16,27 +18,29 @@ internal fun Route.categoryRoute() {
     val insertCategoryUseCase by inject<InsertCategoryUseCase>()
     post("/api/category/insert") {
         val request = call.receive<InsertCategoryRequest>()
-        when (val resource = insertCategoryUseCase(request)) {
-            is Resource.Success -> {
-                call.respond(HttpStatusCode.OK, resource.data)
-            }
-
-            is Resource.Error -> {
-                call.respond(HttpStatusCode.BadRequest, resource.error)
-            }
+        try {
+            val result = insertCategoryUseCase(request)
+            val response = BaseResponse(
+                status = ResponseKeyConstant.SUCCESS,
+                result = result,
+            )
+            call.respond(HttpStatusCode.OK, response)
+        } catch (e: ApplicationException) {
+            call.respond(HttpStatusCode.BadRequest, e.toBaseError())
         }
     }
 
     val getCategoryAllUseCase by inject<GetCategoryAllUseCase>()
     get("/api/category/getCategoryAll") {
-        when (val resource = getCategoryAllUseCase()) {
-            is Resource.Success -> {
-                call.respond(HttpStatusCode.OK, resource.data)
-            }
-
-            is Resource.Error -> {
-                call.respond(HttpStatusCode.BadRequest, resource.error)
-            }
+        try {
+            val result = getCategoryAllUseCase()
+            val response = BaseResponse(
+                status = ResponseKeyConstant.SUCCESS,
+                result = result,
+            )
+            call.respond(HttpStatusCode.OK, response)
+        } catch (e: ApplicationException) {
+            call.respond(HttpStatusCode.BadRequest, e.toBaseError())
         }
     }
 }
