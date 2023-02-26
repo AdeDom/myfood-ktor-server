@@ -1,12 +1,14 @@
 package com.myfood.server.route.http
 
+import com.myfood.server.data.models.base.BaseResponse
 import com.myfood.server.data.models.request.MyRatingScoreRequest
-import com.myfood.server.data.repositories.Resource
 import com.myfood.server.usecase.rating_score.DeleteRatingScoreAllUseCase
 import com.myfood.server.usecase.rating_score.GetRatingScoreAllUseCase
 import com.myfood.server.usecase.rating_score.MyRatingScoreUseCase
 import com.myfood.server.usecase.rating_score.SyncDataRatingScoreUseCase
 import com.myfood.server.utility.constant.RequestKeyConstant
+import com.myfood.server.utility.constant.ResponseKeyConstant
+import com.myfood.server.utility.exception.ApplicationException
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -18,14 +20,15 @@ internal fun Route.ratingScoreRoute() {
 
     val getRatingScoreAllUseCase by inject<GetRatingScoreAllUseCase>()
     get("/api/rating/getRatingScoreAll") {
-        when (val resource = getRatingScoreAllUseCase()) {
-            is Resource.Success -> {
-                call.respond(HttpStatusCode.OK, resource.data)
-            }
-
-            is Resource.Error -> {
-                call.respond(HttpStatusCode.BadRequest, resource.error)
-            }
+        try {
+            val result = getRatingScoreAllUseCase()
+            val response = BaseResponse(
+                status = ResponseKeyConstant.SUCCESS,
+                result = result,
+            )
+            call.respond(HttpStatusCode.OK, response)
+        } catch (e: ApplicationException) {
+            call.respond(HttpStatusCode.BadRequest, e.toBaseError())
         }
     }
 
@@ -33,40 +36,43 @@ internal fun Route.ratingScoreRoute() {
     post("/api/rating/myRatingScore") {
         val authKey = call.request.header(RequestKeyConstant.AUTHORIZATION_KEY)
         val myRatingScoreRequest = call.receive<MyRatingScoreRequest>()
-        when (val resource = myRatingScoreUseCase(authKey, myRatingScoreRequest)) {
-            is Resource.Success -> {
-                call.respond(HttpStatusCode.OK, resource.data)
-            }
-
-            is Resource.Error -> {
-                call.respond(HttpStatusCode.BadRequest, resource.error)
-            }
+        try {
+            val result = myRatingScoreUseCase(authKey, myRatingScoreRequest)
+            val response = BaseResponse(
+                status = ResponseKeyConstant.SUCCESS,
+                result = result,
+            )
+            call.respond(HttpStatusCode.OK, response)
+        } catch (e: ApplicationException) {
+            call.respond(HttpStatusCode.BadRequest, e.toBaseError())
         }
     }
 
     val deleteRatingScoreAllUseCase by inject<DeleteRatingScoreAllUseCase>()
     delete("/api/rating/deleteAll") {
-        when (val resource = deleteRatingScoreAllUseCase()) {
-            is Resource.Success -> {
-                call.respond(HttpStatusCode.OK, resource.data)
-            }
-
-            is Resource.Error -> {
-                call.respond(HttpStatusCode.BadRequest, resource.error)
-            }
+        try {
+            val result = deleteRatingScoreAllUseCase()
+            val response = BaseResponse(
+                status = ResponseKeyConstant.SUCCESS,
+                result = result,
+            )
+            call.respond(HttpStatusCode.OK, response)
+        } catch (e: ApplicationException) {
+            call.respond(HttpStatusCode.BadRequest, e.toBaseError())
         }
     }
 
     val syncDataRatingScoreUseCase by inject<SyncDataRatingScoreUseCase>()
     post("/api/rating/syncDataRatingScore") {
-        when (val resource = syncDataRatingScoreUseCase()) {
-            is Resource.Success -> {
-                call.respond(HttpStatusCode.OK, resource.data)
-            }
-
-            is Resource.Error -> {
-                call.respond(HttpStatusCode.BadRequest, resource.error)
-            }
+        try {
+            val result = syncDataRatingScoreUseCase()
+            val response = BaseResponse(
+                status = ResponseKeyConstant.SUCCESS,
+                result = result,
+            )
+            call.respond(HttpStatusCode.OK, response)
+        } catch (e: ApplicationException) {
+            call.respond(HttpStatusCode.BadRequest, e.toBaseError())
         }
     }
 }

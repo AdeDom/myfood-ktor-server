@@ -14,7 +14,7 @@ internal class MyFavoriteUseCase(
     suspend operator fun invoke(authKey: String?, myFavoriteRequest: MyFavoriteRequest): FavoriteWebSocketsResponse {
         val (foodId) = myFavoriteRequest
         return when {
-            tokenUseCase.isValidateToken(authKey) -> throw ApplicationException(tokenUseCase.getBaseError2(authKey))
+            tokenUseCase.isValidateToken(authKey) -> throw ApplicationException(tokenUseCase.getBaseError(authKey))
             foodId == null -> throw ApplicationException("Food id is null.")
             else -> favoriteRepository.myFavorite(tokenUseCase.getUserId(authKey), foodId)
         }

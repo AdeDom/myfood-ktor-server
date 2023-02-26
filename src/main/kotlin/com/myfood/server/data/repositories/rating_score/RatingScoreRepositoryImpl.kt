@@ -1,14 +1,11 @@
 package com.myfood.server.data.repositories.rating_score
 
-import com.myfood.server.data.models.base.BaseError
-import com.myfood.server.data.models.base.BaseResponse
 import com.myfood.server.data.models.response.RatingScoreResponse
 import com.myfood.server.data.models.web_sockets.RatingScoreWebSocketsResponse
-import com.myfood.server.data.repositories.Resource
 import com.myfood.server.data.resouce.local.rating_score.RatingScoreLocalDataSource
 import com.myfood.server.data.resouce.remote.rating_score.RatingScoreRemoteDataSource
 import com.myfood.server.utility.constant.AppConstant
-import com.myfood.server.utility.constant.ResponseKeyConstant
+import com.myfood.server.utility.exception.ApplicationException
 import org.joda.time.DateTime
 import java.text.DecimalFormat
 import java.util.*
@@ -18,11 +15,8 @@ internal class RatingScoreRepositoryImpl(
     private val ratingScoreRemoteDataSource: RatingScoreRemoteDataSource,
 ) : RatingScoreRepository {
 
-    override suspend fun getRatingScoreAll(): Resource<BaseResponse<List<RatingScoreResponse>>> {
-        val response = BaseResponse<List<RatingScoreResponse>>()
-
-        val ratingScoreEntityList = ratingScoreLocalDataSource.getRatingScoreAll()
-        val ratingScoreResponseList = ratingScoreEntityList.map { ratingScoreEntity ->
+    override suspend fun getRatingScoreAll(): List<RatingScoreResponse> {
+        return ratingScoreLocalDataSource.getRatingScoreAll().map { ratingScoreEntity ->
             RatingScoreResponse(
                 ratingScoreId = ratingScoreEntity.ratingScoreId,
                 userId = ratingScoreEntity.userId,
@@ -33,18 +27,13 @@ internal class RatingScoreRepositoryImpl(
                 updated = ratingScoreEntity.updated,
             )
         }
-        response.result = ratingScoreResponseList
-        response.status = ResponseKeyConstant.SUCCESS
-        return Resource.Success(response)
     }
 
     override suspend fun myRatingScore(
         userId: String,
         foodId: Int,
         ratingScore: Float,
-    ): Resource<BaseResponse<RatingScoreWebSocketsResponse>> {
-        val response = BaseResponse<RatingScoreWebSocketsResponse>()
-
+    ): RatingScoreWebSocketsResponse {
         val ratingScoreEntity = ratingScoreLocalDataSource.findRatingScoreEntityByUserIdAndFoodId(userId, foodId)
         val ratingScoreIdForCreated = UUID.randomUUID().toString().replace("-", "")
         val currentDateTime = DateTime(System.currentTimeMillis() + AppConstant.DATE_TIME_THAI)
@@ -69,17 +58,13 @@ internal class RatingScoreRepositoryImpl(
                 null
             }
             val ratingScoreCountResponse = toRatingScoreCount(ratingScoreAll.size)
-            val ratingScoreWebSocketsResponse = RatingScoreWebSocketsResponse(
+            RatingScoreWebSocketsResponse(
                 foodId = foodId,
                 ratingScore = ratingScoreResponse,
                 ratingScoreCount = ratingScoreCountResponse,
             )
-            response.result = ratingScoreWebSocketsResponse
-            response.status = ResponseKeyConstant.SUCCESS
-            Resource.Success(response)
         } else {
-            response.error = BaseError(message = "Rating score is failed.")
-            Resource.Error(response)
+            throw ApplicationException("Rating score is failed.")
         }
     }
 
@@ -93,24 +78,17 @@ internal class RatingScoreRepositoryImpl(
         }
     }
 
-    override suspend fun deleteRatingScoreAll(): Resource<BaseResponse<String>> {
-        val response = BaseResponse<String>()
-
+    override suspend fun deleteRatingScoreAll(): String {
         val ratingScoreEntityList = ratingScoreLocalDataSource.getRatingScoreAll()
         val deleteRatingScoreCount = ratingScoreLocalDataSource.deleteRatingScoreAll()
         return if (deleteRatingScoreCount == ratingScoreEntityList.size) {
-            response.result = "Delete rating score all is success."
-            response.status = ResponseKeyConstant.SUCCESS
-            Resource.Success(response)
+            "Delete rating score all is success."
         } else {
-            response.error = BaseError(message = "Delete rating score all is failed.")
-            Resource.Error(response)
+            throw ApplicationException("Delete rating score all is failed.")
         }
     }
 
-    override suspend fun syncDataRatingScore(): Resource<BaseResponse<String>> {
-        val response = BaseResponse<String>()
-
+    override suspend fun syncDataRatingScore(): String {
         val ratingScoreLocalList = ratingScoreLocalDataSource.getRatingScoreListByBackupIsLocal()
         val replaceRatingScoreRemoteCount = ratingScoreRemoteDataSource.replaceRatingScoreAll(ratingScoreLocalList)
         return if (ratingScoreLocalList.size == replaceRatingScoreRemoteCount) {
@@ -120,20 +98,15 @@ internal class RatingScoreRepositoryImpl(
                 val replaceRatingScoreLocalCount =
                     ratingScoreLocalDataSource.replaceRatingScoreAll(ratingScoreRemoteList)
                 if (ratingScoreRemoteList.size == replaceRatingScoreLocalCount) {
-                    response.result = "Sync data success."
-                    response.status = ResponseKeyConstant.SUCCESS
-                    Resource.Success(response)
+                    "Sync data success."
                 } else {
-                    response.error = BaseError(message = "Sync data failed (3).")
-                    Resource.Error(response)
+                    throw ApplicationException("Sync data failed (3).")
                 }
             } else {
-                response.error = BaseError(message = "Sync data failed (2).")
-                Resource.Error(response)
+                throw ApplicationException("Sync data failed (2).")
             }
         } else {
-            response.error = BaseError(message = "Sync data failed (1).")
-            Resource.Error(response)
+            throw ApplicationException("Sync data failed (1).")
         }
     }
 }
