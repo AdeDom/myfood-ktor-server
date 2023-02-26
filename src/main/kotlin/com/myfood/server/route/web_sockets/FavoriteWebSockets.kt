@@ -1,9 +1,11 @@
 package com.myfood.server.route.web_sockets
 
+import com.myfood.server.data.models.base.BaseResponse
 import com.myfood.server.data.models.request.MyFavoriteRequest
-import com.myfood.server.data.repositories.Resource
 import com.myfood.server.usecase.favorite.MyFavoriteUseCase
 import com.myfood.server.utility.constant.RequestKeyConstant
+import com.myfood.server.utility.constant.ResponseKeyConstant
+import com.myfood.server.utility.exception.ApplicationException
 import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
@@ -27,19 +29,19 @@ internal fun Route.favoriteWebSocketsRoute() {
 
                 val authKey = call.request.header(RequestKeyConstant.AUTHORIZATION_KEY)
                 val myFavoriteRequest = Json.decodeFromString<MyFavoriteRequest>(text)
-                val resource = myFavoriteUseCase(authKey, myFavoriteRequest)
-                when (resource) {
-                    is Resource.Success -> {
-                        val response = Json.encodeToString(resource.data)
-                        myFavoriteConnections.forEach { session ->
-                            session.send(response)
-                        }
+                try {
+                    val result = myFavoriteUseCase(authKey, myFavoriteRequest)
+                    val response = BaseResponse(
+                        status = ResponseKeyConstant.SUCCESS,
+                        result = result,
+                    )
+                    val json = Json.encodeToString(response)
+                    myFavoriteConnections.forEach { session ->
+                        session.send(json)
                     }
-
-                    is Resource.Error -> {
-                        val response = Json.encodeToString(resource.error)
-                        this.send(response)
-                    }
+                } catch (e: ApplicationException) {
+                    val json = Json.encodeToString(e.toBaseError())
+                    this.send(json)
                 }
             }
         } catch (e: Exception) {

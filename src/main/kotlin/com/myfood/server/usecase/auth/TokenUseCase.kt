@@ -5,6 +5,7 @@ import com.auth0.jwt.impl.PublicClaims
 import com.myfood.server.data.models.base.BaseError
 import com.myfood.server.data.models.base.ErrorResponse
 import com.myfood.server.data.repositories.auth.AuthRepository
+import com.myfood.server.utility.constant.ResponseKeyConstant
 import com.myfood.server.utility.jwt.JwtHelper
 
 internal class TokenUseCase(
@@ -55,6 +56,27 @@ internal class TokenUseCase(
                 code = ErrorResponse.UnauthorizedError.code,
                 message = ErrorResponse.UnauthorizedError.message
             )
+        }
+    }
+
+    suspend fun getBaseError2(authKey: String?): String {
+        return if (authKey != null) {
+            val accessToken = authKey.replace("Bearer", "").trim()
+            val expiresAtClaim = JWT().decodeJwt(accessToken).getClaim(PublicClaims.EXPIRES_AT).asLong()
+            val currentTime = System.currentTimeMillis() / 1_000L
+            val isTokenExpire = expiresAtClaim.minus(currentTime) > 0
+            if (isTokenExpire) {
+                val statusLoginOrRefreshCount = authRepository.findStatusLoginOrRefreshByAccessToken(accessToken)
+                if (statusLoginOrRefreshCount == 1L) {
+                    ResponseKeyConstant.SUCCESS
+                } else {
+                    ErrorResponse.AccessTokenNotAvailableError.message
+                }
+            } else {
+                ErrorResponse.AccessTokenError.message
+            }
+        } else {
+            ErrorResponse.UnauthorizedError.message
         }
     }
 

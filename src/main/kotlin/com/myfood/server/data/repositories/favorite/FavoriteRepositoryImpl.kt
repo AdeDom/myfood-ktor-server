@@ -1,14 +1,11 @@
 package com.myfood.server.data.repositories.favorite
 
-import com.myfood.server.data.models.base.BaseError
-import com.myfood.server.data.models.base.BaseResponse
 import com.myfood.server.data.models.response.FavoriteResponse
 import com.myfood.server.data.models.web_sockets.FavoriteWebSocketsResponse
-import com.myfood.server.data.repositories.Resource
 import com.myfood.server.data.resouce.local.favorite.FavoriteLocalDataSource
 import com.myfood.server.data.resouce.remote.favorite.FavoriteRemoteDataSource
 import com.myfood.server.utility.constant.AppConstant
-import com.myfood.server.utility.constant.ResponseKeyConstant
+import com.myfood.server.utility.exception.ApplicationException
 import org.joda.time.DateTime
 import java.util.*
 
@@ -17,11 +14,9 @@ internal class FavoriteRepositoryImpl(
     private val favoriteRemoteDataSource: FavoriteRemoteDataSource,
 ) : FavoriteRepository {
 
-    override suspend fun getFavoriteAll(): Resource<BaseResponse<List<FavoriteResponse>>> {
-        val response = BaseResponse<List<FavoriteResponse>>()
-
+    override suspend fun getFavoriteAll(): List<FavoriteResponse> {
         val favoriteEntityList = favoriteLocalDataSource.getFavoriteAll()
-        val favoriteResponseList = favoriteEntityList.map { favoriteEntity ->
+        return favoriteEntityList.map { favoriteEntity ->
             FavoriteResponse(
                 favoriteId = favoriteEntity.favoriteId,
                 userId = favoriteEntity.userId,
@@ -32,17 +27,9 @@ internal class FavoriteRepositoryImpl(
                 updated = favoriteEntity.updated,
             )
         }
-        response.result = favoriteResponseList
-        response.status = ResponseKeyConstant.SUCCESS
-        return Resource.Success(response)
     }
 
-    override suspend fun myFavorite(
-        userId: String,
-        foodId: Int
-    ): Resource<BaseResponse<FavoriteWebSocketsResponse>> {
-        val response = BaseResponse<FavoriteWebSocketsResponse>()
-
+    override suspend fun myFavorite(userId: String, foodId: Int): FavoriteWebSocketsResponse {
         val favoriteEntity = favoriteLocalDataSource.findFavoriteEntityByUserIdAndFoodId(userId, foodId)
         val favoriteIdForCreated = UUID.randomUUID().toString().replace("-", "")
         val currentDateTime = DateTime(System.currentTimeMillis() + AppConstant.DATE_TIME_THAI)
@@ -66,37 +53,26 @@ internal class FavoriteRepositoryImpl(
         ) ?: 0
         return if (myFavoriteCount == 1) {
             val favorite = favoriteLocalDataSource.getFavoriteCountByFoodIdAndFavorite(foodId)
-            val favoriteWebSocketsResponse = FavoriteWebSocketsResponse(
+            FavoriteWebSocketsResponse(
                 foodId = foodId,
                 favorite = favorite,
             )
-            response.result = favoriteWebSocketsResponse
-            response.status = ResponseKeyConstant.SUCCESS
-            Resource.Success(response)
         } else {
-            response.error = BaseError(message = "Favorite is failed.")
-            Resource.Error(response)
+            throw ApplicationException("Favorite is failed.")
         }
     }
 
-    override suspend fun deleteFavoriteAll(): Resource<BaseResponse<String>> {
-        val response = BaseResponse<String>()
-
+    override suspend fun deleteFavoriteAll(): String {
         val favoriteEntityList = favoriteLocalDataSource.getFavoriteAll()
         val deleteFavoriteCount = favoriteLocalDataSource.deleteFavoriteAll()
         return if (deleteFavoriteCount == favoriteEntityList.size) {
-            response.result = "Delete favorite all is success."
-            response.status = ResponseKeyConstant.SUCCESS
-            Resource.Success(response)
+            "Delete favorite all is success."
         } else {
-            response.error = BaseError(message = "Delete favorite all is failed.")
-            Resource.Error(response)
+            throw ApplicationException("Delete favorite all is failed.")
         }
     }
 
-    override suspend fun syncDataFavorite(): Resource<BaseResponse<String>> {
-        val response = BaseResponse<String>()
-
+    override suspend fun syncDataFavorite(): String {
         val favoriteLocalList = favoriteLocalDataSource.getFavoriteListByBackupIsLocal()
         val replaceFavoriteRemoteCount = favoriteRemoteDataSource.replaceFavoriteAll(favoriteLocalList)
         return if (favoriteLocalList.size == replaceFavoriteRemoteCount) {
@@ -105,20 +81,15 @@ internal class FavoriteRepositoryImpl(
                 val favoriteRemoteList = favoriteRemoteDataSource.getFavoriteAll()
                 val replaceFavoriteLocalCount = favoriteLocalDataSource.replaceFavoriteAll(favoriteRemoteList)
                 if (favoriteRemoteList.size == replaceFavoriteLocalCount) {
-                    response.result = "Sync data success."
-                    response.status = ResponseKeyConstant.SUCCESS
-                    Resource.Success(response)
+                    "Sync data success."
                 } else {
-                    response.error = BaseError(message = "Sync data failed (3).")
-                    Resource.Error(response)
+                    throw ApplicationException("Sync data failed (3).")
                 }
             } else {
-                response.error = BaseError(message = "Sync data failed (2).")
-                Resource.Error(response)
+                throw ApplicationException("Sync data failed (2).")
             }
         } else {
-            response.error = BaseError(message = "Sync data failed (1).")
-            Resource.Error(response)
+            throw ApplicationException("Sync data failed (1).")
         }
     }
 }

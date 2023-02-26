@@ -1,12 +1,14 @@
 package com.myfood.server.route.http
 
+import com.myfood.server.data.models.base.BaseResponse
 import com.myfood.server.data.models.request.MyFavoriteRequest
-import com.myfood.server.data.repositories.Resource
 import com.myfood.server.usecase.favorite.DeleteFavoriteAllUseCase
 import com.myfood.server.usecase.favorite.GetFavoriteAllUseCase
 import com.myfood.server.usecase.favorite.MyFavoriteUseCase
 import com.myfood.server.usecase.favorite.SyncDataFavoriteUseCase
 import com.myfood.server.utility.constant.RequestKeyConstant
+import com.myfood.server.utility.constant.ResponseKeyConstant
+import com.myfood.server.utility.exception.ApplicationException
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -18,14 +20,15 @@ internal fun Route.favoriteRoute() {
 
     val getFavoriteAllUseCase by inject<GetFavoriteAllUseCase>()
     get("/api/favorite/getFavoriteAll") {
-        when (val resource = getFavoriteAllUseCase()) {
-            is Resource.Success -> {
-                call.respond(HttpStatusCode.OK, resource.data)
-            }
-
-            is Resource.Error -> {
-                call.respond(HttpStatusCode.BadRequest, resource.error)
-            }
+        try {
+            val result = getFavoriteAllUseCase()
+            val response = BaseResponse(
+                status = ResponseKeyConstant.SUCCESS,
+                result = result,
+            )
+            call.respond(HttpStatusCode.OK, response)
+        } catch (e: ApplicationException) {
+            call.respond(HttpStatusCode.BadRequest, e.toBaseError())
         }
     }
 
@@ -33,40 +36,43 @@ internal fun Route.favoriteRoute() {
     post("/api/favorite/myFavorite") {
         val authKey = call.request.header(RequestKeyConstant.AUTHORIZATION_KEY)
         val myFavoriteRequest = call.receive<MyFavoriteRequest>()
-        when (val resource = myFavoriteUseCase(authKey, myFavoriteRequest)) {
-            is Resource.Success -> {
-                call.respond(HttpStatusCode.OK, resource.data)
-            }
-
-            is Resource.Error -> {
-                call.respond(HttpStatusCode.BadRequest, resource.error)
-            }
+        try {
+            val result = myFavoriteUseCase(authKey, myFavoriteRequest)
+            val response = BaseResponse(
+                status = ResponseKeyConstant.SUCCESS,
+                result = result,
+            )
+            call.respond(HttpStatusCode.OK, response)
+        } catch (e: ApplicationException) {
+            call.respond(HttpStatusCode.BadRequest, e.toBaseError())
         }
     }
 
     val deleteFavoriteAllUseCase by inject<DeleteFavoriteAllUseCase>()
     delete("/api/favorite/deleteAll") {
-        when (val resource = deleteFavoriteAllUseCase()) {
-            is Resource.Success -> {
-                call.respond(HttpStatusCode.OK, resource.data)
-            }
-
-            is Resource.Error -> {
-                call.respond(HttpStatusCode.BadRequest, resource.error)
-            }
+        try {
+            val result = deleteFavoriteAllUseCase()
+            val response = BaseResponse(
+                status = ResponseKeyConstant.SUCCESS,
+                result = result,
+            )
+            call.respond(HttpStatusCode.OK, response)
+        } catch (e: ApplicationException) {
+            call.respond(HttpStatusCode.BadRequest, e.toBaseError())
         }
     }
 
     val syncDataFavoriteUseCase by inject<SyncDataFavoriteUseCase>()
     post("/api/favorite/syncDataFavorite") {
-        when (val resource = syncDataFavoriteUseCase()) {
-            is Resource.Success -> {
-                call.respond(HttpStatusCode.OK, resource.data)
-            }
-
-            is Resource.Error -> {
-                call.respond(HttpStatusCode.BadRequest, resource.error)
-            }
+        try {
+            val result = syncDataFavoriteUseCase()
+            val response = BaseResponse(
+                status = ResponseKeyConstant.SUCCESS,
+                result = result,
+            )
+            call.respond(HttpStatusCode.OK, response)
+        } catch (e: ApplicationException) {
+            call.respond(HttpStatusCode.BadRequest, e.toBaseError())
         }
     }
 }
