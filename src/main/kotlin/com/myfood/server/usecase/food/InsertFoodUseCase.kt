@@ -1,50 +1,24 @@
 package com.myfood.server.usecase.food
 
-import com.myfood.server.data.models.base.BaseError
-import com.myfood.server.data.models.base.BaseResponse
 import com.myfood.server.data.models.request.InsertFoodRequest
-import com.myfood.server.data.repositories.Resource
 import com.myfood.server.data.repositories.category.CategoryRepository
 import com.myfood.server.data.repositories.food.FoodRepository
+import com.myfood.server.utility.exception.ApplicationException
 
 internal class InsertFoodUseCase(
     private val categoryRepository: CategoryRepository,
     private val foodRepository: FoodRepository,
 ) {
 
-    suspend operator fun invoke(insertFoodRequest: InsertFoodRequest): Resource<BaseResponse<String>> {
-        val response = BaseResponse<String>()
-
+    suspend operator fun invoke(insertFoodRequest: InsertFoodRequest): String {
         val (foodName, _, image, price, _, categoryId) = insertFoodRequest
         return when {
-            foodName.isNullOrBlank() -> {
-                response.error = BaseError(message = "Food name is null or blank.")
-                Resource.Error(response)
-            }
-
-            image.isNullOrBlank() -> {
-                response.error = BaseError(message = "Image is null or blank.")
-                Resource.Error(response)
-            }
-
-            price == null -> {
-                response.error = BaseError(message = "Price is null or blank.")
-                Resource.Error(response)
-            }
-
-            categoryId == null -> {
-                response.error = BaseError(message = "Category id is null or blank.")
-                Resource.Error(response)
-            }
-
-            hasCategory(categoryId) -> {
-                response.error = BaseError(message = "Category id not found.")
-                Resource.Error(response)
-            }
-
-            else -> {
-                foodRepository.insertFood(insertFoodRequest)
-            }
+            foodName.isNullOrBlank() -> throw ApplicationException("Food name is null or blank.")
+            image.isNullOrBlank() -> throw ApplicationException("Image is null or blank.")
+            price == null -> throw ApplicationException("Price is null or blank.")
+            categoryId == null -> throw ApplicationException("Category id is null or blank.")
+            hasCategory(categoryId) -> throw ApplicationException("Category id not found.")
+            else -> foodRepository.insertFood(insertFoodRequest)
         }
     }
 

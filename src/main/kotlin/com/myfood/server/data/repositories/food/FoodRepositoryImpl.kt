@@ -1,12 +1,9 @@
 package com.myfood.server.data.repositories.food
 
-import com.myfood.server.data.models.base.BaseError
-import com.myfood.server.data.models.base.BaseResponse
 import com.myfood.server.data.models.entities.MyFoodEntity
 import com.myfood.server.data.models.request.InsertFoodRequest
 import com.myfood.server.data.models.response.FoodAndCategoryResponse
 import com.myfood.server.data.models.response.FoodDetailResponse
-import com.myfood.server.data.repositories.Resource
 import com.myfood.server.data.resouce.local.favorite.FavoriteLocalDataSource
 import com.myfood.server.data.resouce.local.food.FoodLocalDataSource
 import com.myfood.server.data.resouce.local.food_and_category.FoodAndCategoryLocalDataSource
@@ -14,7 +11,7 @@ import com.myfood.server.data.resouce.local.rating_score.RatingScoreLocalDataSou
 import com.myfood.server.data.resouce.remote.food.FoodRemoteDataSource
 import com.myfood.server.data.resouce.remote.food.MyFoodRemoteDataSource
 import com.myfood.server.utility.constant.AppConstant
-import com.myfood.server.utility.constant.ResponseKeyConstant
+import com.myfood.server.utility.exception.ApplicationException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import java.text.DecimalFormat
@@ -28,32 +25,20 @@ internal class FoodRepositoryImpl(
     private val foodRemoteDataSource: FoodRemoteDataSource,
 ) : FoodRepository {
 
-    override suspend fun getMyFood(): Resource<BaseResponse<List<MyFoodEntity>>> {
-        val response = BaseResponse<List<MyFoodEntity>>()
-
-        val myFoods = myFoodRemoteDataSource.getMyFood()
-        response.status = ResponseKeyConstant.SUCCESS
-        response.result = myFoods
-        return Resource.Success(response)
+    override suspend fun getMyFood(): List<MyFoodEntity> {
+        return myFoodRemoteDataSource.getMyFood()
     }
 
-    override suspend fun insertFood(insertFoodRequest: InsertFoodRequest): Resource<BaseResponse<String>> {
-        val response = BaseResponse<String>()
-
+    override suspend fun insertFood(insertFoodRequest: InsertFoodRequest): String {
         val isInsertFood = foodRemoteDataSource.insertFood(insertFoodRequest, AppConstant.ACTIVE) == 1
         return if (isInsertFood) {
-            response.status = ResponseKeyConstant.SUCCESS
-            response.result = "Insert food success."
-            Resource.Success(response)
+            "Insert food success."
         } else {
-            response.error = BaseError(message = "Insert food failed.")
-            Resource.Error(response)
+            throw ApplicationException("Insert food failed.")
         }
     }
 
-    override suspend fun getFoodDetail(foodId: Int): Resource<BaseResponse<FoodDetailResponse>> {
-        val response = BaseResponse<FoodDetailResponse>()
-
+    override suspend fun getFoodDetail(foodId: Int): FoodDetailResponse {
         var foodAllList = foodLocalDataSource.getFoodAll()
         val foodEntity = if (foodAllList.isEmpty()) {
             foodAllList = foodRemoteDataSource.getFoodAll()
@@ -79,8 +64,7 @@ internal class FoodRepositoryImpl(
         }
 
         return if (foodEntity != null) {
-            response.status = ResponseKeyConstant.SUCCESS
-            val foodDetailResponse = FoodDetailResponse(
+            FoodDetailResponse(
                 foodId = foodEntity.foodId,
                 foodName = foodEntity.foodName,
                 alias = foodEntity.alias,
@@ -95,11 +79,8 @@ internal class FoodRepositoryImpl(
                 created = foodEntity.created.toString(AppConstant.DATE_TIME_FORMAT_RESPONSE),
                 updated = foodEntity.updated?.toString(AppConstant.DATE_TIME_FORMAT_RESPONSE),
             )
-            response.result = foodDetailResponse
-            Resource.Success(response)
         } else {
-            response.error = BaseError(message = "Food is null or blank.")
-            Resource.Error(response)
+            throw ApplicationException("Food is null or blank.")
         }
     }
 
