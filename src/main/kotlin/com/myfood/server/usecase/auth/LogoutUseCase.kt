@@ -1,26 +1,16 @@
 package com.myfood.server.usecase.auth
 
-import com.myfood.server.data.models.base.BaseError
-import com.myfood.server.data.models.base.BaseResponse
-import com.myfood.server.data.repositories.Resource
 import com.myfood.server.data.repositories.auth.AuthRepository
+import com.myfood.server.utility.exception.ApplicationException
 
 internal class LogoutUseCase(
     private val authRepository: AuthRepository,
 ) {
 
-    suspend operator fun invoke(userId: String?): Resource<BaseResponse<String>> {
-        val response = BaseResponse<String>()
-
+    suspend operator fun invoke(userId: String?): String {
         return when {
-            userId.isNullOrBlank() -> {
-                response.error = BaseError(message = "User id is null or blank.")
-                Resource.Error(response)
-            }
-
-            else -> {
-                authRepository.logout(userId)
-            }
+            userId.isNullOrBlank() -> throw ApplicationException("User id is null or blank.")
+            else -> authRepository.logout(userId)
         }
     }
 }

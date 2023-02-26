@@ -1,10 +1,8 @@
 package com.myfood.server.usecase.auth
 
-import com.myfood.server.data.models.base.BaseError
-import com.myfood.server.data.models.base.BaseResponse
 import com.myfood.server.data.models.request.ChangePasswordRequest
-import com.myfood.server.data.repositories.Resource
 import com.myfood.server.data.repositories.auth.AuthRepository
+import com.myfood.server.utility.exception.ApplicationException
 
 internal class ChangePasswordUseCase(
     private val authRepository: AuthRepository,
@@ -13,34 +11,14 @@ internal class ChangePasswordUseCase(
     suspend operator fun invoke(
         userId: String?,
         changePasswordRequest: ChangePasswordRequest
-    ): Resource<BaseResponse<String>> {
-        val response = BaseResponse<String>()
-
+    ): String {
         val (oldPassword, newPassword) = changePasswordRequest
         return when {
-            userId.isNullOrBlank() -> {
-                response.error = BaseError(message = "User id is null or blank.")
-                Resource.Error(response)
-            }
-
-            oldPassword.isNullOrBlank() -> {
-                response.error = BaseError(message = "Old password is null or blank.")
-                Resource.Error(response)
-            }
-
-            newPassword.isNullOrBlank() -> {
-                response.error = BaseError(message = "New password is null or blank.")
-                Resource.Error(response)
-            }
-
-            isPasswordInvalid(userId, oldPassword) -> {
-                response.error = BaseError(message = "The old password is invalid.")
-                Resource.Error(response)
-            }
-
-            else -> {
-                authRepository.changePassword(userId, newPassword)
-            }
+            userId.isNullOrBlank() -> throw ApplicationException("User id is null or blank.")
+            oldPassword.isNullOrBlank() -> throw ApplicationException("Old password is null or blank.")
+            newPassword.isNullOrBlank() -> throw ApplicationException("New password is null or blank.")
+            isPasswordInvalid(userId, oldPassword) -> throw ApplicationException("The old password is invalid.")
+            else -> authRepository.changePassword(userId, newPassword)
         }
     }
 

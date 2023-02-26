@@ -1,9 +1,7 @@
 package com.myfood.server.data.repositories.auth
 
-import com.myfood.server.data.models.base.BaseResponse
 import com.myfood.server.data.models.request.RegisterRequest
 import com.myfood.server.data.models.response.TokenResponse
-import com.myfood.server.data.repositories.Resource
 
 internal interface AuthRepository {
 
@@ -15,11 +13,11 @@ internal interface AuthRepository {
 
     suspend fun findUserByUserIdAndPassword(userId: String, password: String): Long
 
-    suspend fun changePassword(userId: String, newPassword: String): Resource<BaseResponse<String>>
+    suspend fun changePassword(userId: String, newPassword: String): String
 
-    suspend fun logout(userId: String): Resource<BaseResponse<String>>
+    suspend fun logout(userId: String): String
 
-    suspend fun refreshToken(refreshTokenMaster: String): Resource<BaseResponse<TokenResponse>>
+    suspend fun refreshToken(refreshTokenMaster: String): TokenResponse
 
     suspend fun updateStatusLogoutByAccessTokenAndRefreshToken(accessToken: String, refreshToken: String): Int
 
@@ -27,7 +25,7 @@ internal interface AuthRepository {
 
     suspend fun findTokenLogoutByAccessTokenAndRefreshToken(accessToken: String, refreshToken: String): Long
 
-    suspend fun syncDataAuth(): Resource<BaseResponse<String>>
+    suspend fun syncDataAuth(): String
 
     suspend fun findStatusLoginOrRefreshByAccessToken(accessToken: String): Long
 }

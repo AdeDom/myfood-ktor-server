@@ -5,7 +5,6 @@ import com.myfood.server.data.models.request.ChangePasswordRequest
 import com.myfood.server.data.models.request.LoginRequest
 import com.myfood.server.data.models.request.RegisterRequest
 import com.myfood.server.data.models.request.TokenRequest
-import com.myfood.server.data.repositories.Resource
 import com.myfood.server.usecase.auth.*
 import com.myfood.server.utility.constant.ResponseKeyConstant
 import com.myfood.server.utility.exception.ApplicationException
@@ -54,28 +53,30 @@ internal fun Route.authRoute() {
     val refreshTokenUseCase by inject<RefreshTokenUseCase>()
     post("/api/auth/refreshToken") {
         val request = call.receive<TokenRequest>()
-        when (val resource = refreshTokenUseCase(request)) {
-            is Resource.Success -> {
-                call.respond(HttpStatusCode.OK, resource.data)
-            }
-
-            is Resource.Error -> {
-                call.respond(HttpStatusCode.Forbidden, resource.error)
-            }
+        try {
+            val result = refreshTokenUseCase(request)
+            val response = BaseResponse(
+                status = ResponseKeyConstant.SUCCESS,
+                result = result,
+            )
+            call.respond(HttpStatusCode.OK, response)
+        } catch (e: ApplicationException) {
+            call.respond(HttpStatusCode.Forbidden, e.toBaseError())
         }
     }
 
     val logoutUseCase by inject<LogoutUseCase>()
     postAuth("/api/auth/logout") {
         val userId = call.userId
-        when (val resource = logoutUseCase(userId)) {
-            is Resource.Success -> {
-                call.respond(HttpStatusCode.OK, resource.data)
-            }
-
-            is Resource.Error -> {
-                call.respond(HttpStatusCode.BadRequest, resource.error)
-            }
+        try {
+            val result = logoutUseCase(userId)
+            val response = BaseResponse(
+                status = ResponseKeyConstant.SUCCESS,
+                result = result,
+            )
+            call.respond(HttpStatusCode.OK, response)
+        } catch (e: ApplicationException) {
+            call.respond(HttpStatusCode.BadRequest, e.toBaseError())
         }
     }
 
@@ -83,27 +84,29 @@ internal fun Route.authRoute() {
     putAuth("/api/auth/changePassword") {
         val userId = call.userId
         val request = call.receive<ChangePasswordRequest>()
-        when (val resource = changePasswordUseCase(userId, request)) {
-            is Resource.Success -> {
-                call.respond(HttpStatusCode.OK, resource.data)
-            }
-
-            is Resource.Error -> {
-                call.respond(HttpStatusCode.BadRequest, resource.error)
-            }
+        try {
+            val result = changePasswordUseCase(userId, request)
+            val response = BaseResponse(
+                status = ResponseKeyConstant.SUCCESS,
+                result = result,
+            )
+            call.respond(HttpStatusCode.OK, response)
+        } catch (e: ApplicationException) {
+            call.respond(HttpStatusCode.BadRequest, e.toBaseError())
         }
     }
 
     val syncDataAuthUseCase by inject<SyncDataAuthUseCase>()
     post("/api/auth/syncDataAuth") {
-        when (val resource = syncDataAuthUseCase()) {
-            is Resource.Success -> {
-                call.respond(HttpStatusCode.OK, resource.data)
-            }
-
-            is Resource.Error -> {
-                call.respond(HttpStatusCode.BadRequest, resource.error)
-            }
+        try {
+            val result = syncDataAuthUseCase()
+            val response = BaseResponse(
+                status = ResponseKeyConstant.SUCCESS,
+                result = result,
+            )
+            call.respond(HttpStatusCode.OK, response)
+        } catch (e: ApplicationException) {
+            call.respond(HttpStatusCode.BadRequest, e.toBaseError())
         }
     }
 }

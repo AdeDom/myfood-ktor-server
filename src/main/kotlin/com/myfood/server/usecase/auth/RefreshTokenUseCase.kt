@@ -1,12 +1,9 @@
 package com.myfood.server.usecase.auth
 
-import com.myfood.server.data.models.base.BaseError
-import com.myfood.server.data.models.base.BaseResponse
-import com.myfood.server.data.models.base.ErrorResponse
 import com.myfood.server.data.models.request.TokenRequest
 import com.myfood.server.data.models.response.TokenResponse
-import com.myfood.server.data.repositories.Resource
 import com.myfood.server.data.repositories.auth.AuthRepository
+import com.myfood.server.utility.exception.ApplicationException
 import com.myfood.server.utility.jwt.JwtHelper
 
 internal class RefreshTokenUseCase(
@@ -14,38 +11,28 @@ internal class RefreshTokenUseCase(
     private val authRepository: AuthRepository,
 ) {
 
-    suspend operator fun invoke(tokenRequest: TokenRequest): Resource<BaseResponse<TokenResponse>> {
-        val response = BaseResponse<TokenResponse>()
-
+    suspend operator fun invoke(tokenRequest: TokenRequest): TokenResponse {
         val (accessToken, refreshToken) = tokenRequest
         return when {
             accessToken.isNullOrBlank() -> {
-                response.error = BaseError(message = "Access token is null or blank.")
-                Resource.Error(response)
+                throw ApplicationException("Access token is null or blank.")
             }
 
             refreshToken.isNullOrBlank() -> {
-                response.error = BaseError(message = "Refresh token is null or blank.")
-                Resource.Error(response)
+                throw ApplicationException("Refresh token is null or blank.")
             }
 
             isValidateAccessTokenAndRefreshToken(accessToken, refreshToken) -> {
-                response.error = BaseError(message = "Access token or refresh token incorrect.")
-                Resource.Error(response)
+                throw ApplicationException("Access token or refresh token incorrect.")
             }
 
             isValidateIsLogout(accessToken, refreshToken) -> {
-                response.error = BaseError(message = "Token is already used.")
-                Resource.Error(response)
+                throw ApplicationException("Token is already used.")
             }
 
             isValidateRefreshToken(refreshToken) -> {
                 authRepository.updateStatusLogoutByAccessTokenAndRefreshToken(accessToken, refreshToken)
-                response.error = BaseError(
-                    code = ErrorResponse.RefreshTokenError.code,
-                    message = ErrorResponse.RefreshTokenError.message,
-                )
-                Resource.Error(response)
+                throw ApplicationException("Token is already used.")
             }
 
             else -> {

@@ -1,15 +1,11 @@
 package com.myfood.server.data.repositories.auth
 
-import com.myfood.server.data.models.base.BaseError
-import com.myfood.server.data.models.base.BaseResponse
 import com.myfood.server.data.models.entities.AuthMasterEntity
 import com.myfood.server.data.models.request.RegisterRequest
 import com.myfood.server.data.models.response.TokenResponse
-import com.myfood.server.data.repositories.Resource
 import com.myfood.server.data.resouce.local.auth.AuthLocalDataSource
 import com.myfood.server.data.resouce.remote.auth.AuthRemoteDataSource
 import com.myfood.server.utility.constant.AppConstant
-import com.myfood.server.utility.constant.ResponseKeyConstant
 import com.myfood.server.utility.exception.ApplicationException
 import com.myfood.server.utility.jwt.JwtHelper
 import java.io.UnsupportedEncodingException
@@ -109,23 +105,16 @@ internal class AuthRepositoryImpl(
         return authRemoteDataSource.findUserByUserIdAndPassword(userId, encryptSHA(password))
     }
 
-    override suspend fun changePassword(userId: String, newPassword: String): Resource<BaseResponse<String>> {
-        val response = BaseResponse<String>()
-
+    override suspend fun changePassword(userId: String, newPassword: String): String {
         val isUpdateUserPassword = authRemoteDataSource.updateUserPassword(userId, encryptSHA(newPassword)) == 1
         return if (isUpdateUserPassword) {
-            response.status = ResponseKeyConstant.SUCCESS
-            response.result = "Change password success."
-            Resource.Success(response)
+            "Change password success."
         } else {
-            response.error = BaseError(message = "Change password failed.")
-            Resource.Error(response)
+            throw ApplicationException("Change password failed.")
         }
     }
 
-    override suspend fun logout(userId: String): Resource<BaseResponse<String>> {
-        val response = BaseResponse<String>()
-
+    override suspend fun logout(userId: String): String {
         val getAuthListOriginal = authLocalDataSource.getAuthListByStatusLoginOrRefresh()
         val getAuthList = getAuthListOriginal.map { authEntity ->
             AuthMasterEntity(
@@ -145,18 +134,13 @@ internal class AuthRepositoryImpl(
             updateAuthLogoutCount += authLocalDataSource.updateAuthStatusLogoutByAuthId(authId)
         }
         return if (updateAuthLogoutCount == getAuthIdList.size) {
-            response.status = ResponseKeyConstant.SUCCESS
-            response.result = "Logout success."
-            return Resource.Success(response)
+            "Logout success."
         } else {
-            response.error = BaseError(message = "Logout failed.")
-            Resource.Error(response)
+            throw ApplicationException("Logout failed.")
         }
     }
 
-    override suspend fun refreshToken(refreshTokenMaster: String): Resource<BaseResponse<TokenResponse>> {
-        val response = BaseResponse<TokenResponse>()
-
+    override suspend fun refreshToken(refreshTokenMaster: String): TokenResponse {
         val userId = jwtHelper.decodeJwtGetUserId(refreshTokenMaster)
 
         val getAuthListOriginal = authLocalDataSource.getAuthListByStatusLoginOrRefresh()
@@ -185,20 +169,15 @@ internal class AuthRepositoryImpl(
             val isBackup = AppConstant.LOCAL_BACKUP
             val insertAuthCount = authLocalDataSource.insertAuth(authId, accessToken, refreshToken, status, isBackup)
             if (insertAuthCount == 1) {
-                val tokenResponse = TokenResponse(
+                TokenResponse(
                     accessToken = accessToken,
                     refreshToken = refreshToken,
                 )
-                response.status = ResponseKeyConstant.SUCCESS
-                response.result = tokenResponse
-                Resource.Success(response)
             } else {
-                response.error = BaseError(message = "Refresh token invalid.")
-                Resource.Error(response)
+                throw ApplicationException("Refresh token invalid.")
             }
         } else {
-            response.error = BaseError(message = "Refresh token invalid.")
-            Resource.Error(response)
+            throw ApplicationException("Refresh token invalid.")
         }
     }
 
@@ -217,9 +196,7 @@ internal class AuthRepositoryImpl(
         return authLocalDataSource.findTokenLogoutByAccessTokenAndRefreshToken(accessToken, refreshToken)
     }
 
-    override suspend fun syncDataAuth(): Resource<BaseResponse<String>> {
-        val response = BaseResponse<String>()
-
+    override suspend fun syncDataAuth(): String {
         val authLocalList = authLocalDataSource.getAuthListByBackupIsLocal()
         val replaceAuthRemoteCount = authRemoteDataSource.replaceAuthAll(authLocalList)
         return if (authLocalList.size == replaceAuthRemoteCount) {
@@ -228,20 +205,15 @@ internal class AuthRepositoryImpl(
                 val authRemoteList = authRemoteDataSource.getAuthAll()
                 val replaceAuthLocalCount = authLocalDataSource.replaceAuthAll(authRemoteList)
                 if (authRemoteList.size == replaceAuthLocalCount) {
-                    response.result = "Sync data success."
-                    response.status = ResponseKeyConstant.SUCCESS
-                    Resource.Success(response)
+                    "Sync data success."
                 } else {
-                    response.error = BaseError(message = "Sync data failed (3).")
-                    Resource.Error(response)
+                    throw ApplicationException("Sync data failed (3).")
                 }
             } else {
-                response.error = BaseError(message = "Sync data failed (2).")
-                Resource.Error(response)
+                throw ApplicationException("Sync data failed (2).")
             }
         } else {
-            response.error = BaseError(message = "Sync data failed (1).")
-            Resource.Error(response)
+            throw ApplicationException("Sync data failed (1).")
         }
     }
 
