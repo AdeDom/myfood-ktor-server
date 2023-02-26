@@ -1,11 +1,14 @@
 package com.myfood.server.route.http
 
+import com.myfood.server.data.models.base.BaseResponse
 import com.myfood.server.data.models.request.ChangePasswordRequest
 import com.myfood.server.data.models.request.LoginRequest
 import com.myfood.server.data.models.request.RegisterRequest
 import com.myfood.server.data.models.request.TokenRequest
 import com.myfood.server.data.repositories.Resource
 import com.myfood.server.usecase.auth.*
+import com.myfood.server.utility.constant.ResponseKeyConstant
+import com.myfood.server.utility.exception.ApplicationException
 import com.myfood.server.utility.extension.postAuth
 import com.myfood.server.utility.extension.putAuth
 import com.myfood.server.utility.extension.userId
@@ -21,28 +24,30 @@ internal fun Route.authRoute() {
     val loginUseCase by inject<LoginUseCase>()
     post("/api/auth/login") {
         val request = call.receive<LoginRequest>()
-        when (val resource = loginUseCase(request)) {
-            is Resource.Success -> {
-                call.respond(HttpStatusCode.OK, resource.data)
-            }
-
-            is Resource.Error -> {
-                call.respond(HttpStatusCode.BadRequest, resource.error)
-            }
+        try {
+            val result = loginUseCase(request)
+            val response = BaseResponse(
+                status = ResponseKeyConstant.SUCCESS,
+                result = result,
+            )
+            call.respond(HttpStatusCode.OK, response)
+        } catch (e: ApplicationException) {
+            call.respond(HttpStatusCode.BadRequest, e.toBaseError())
         }
     }
 
     val registerUseCase by inject<RegisterUseCase>()
     post("/api/auth/register") {
         val request = call.receive<RegisterRequest>()
-        when (val resource = registerUseCase(request)) {
-            is Resource.Success -> {
-                call.respond(HttpStatusCode.OK, resource.data)
-            }
-
-            is Resource.Error -> {
-                call.respond(HttpStatusCode.BadRequest, resource.error)
-            }
+        try {
+            val result = registerUseCase(request)
+            val response = BaseResponse(
+                status = ResponseKeyConstant.SUCCESS,
+                result = result,
+            )
+            call.respond(HttpStatusCode.OK, response)
+        } catch (e: ApplicationException) {
+            call.respond(HttpStatusCode.BadRequest, e.toBaseError())
         }
     }
 

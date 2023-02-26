@@ -7,11 +7,11 @@ import com.myfood.server.data.repositories.Resource
 
 internal interface AuthRepository {
 
-    suspend fun login(email: String, password: String): Resource<BaseResponse<TokenResponse>>
+    suspend fun login(email: String, password: String): TokenResponse
 
     suspend fun findUserByEmail(email: String): Long
 
-    suspend fun register(registerRequest: RegisterRequest): Resource<BaseResponse<TokenResponse>>
+    suspend fun register(registerRequest: RegisterRequest): TokenResponse
 
     suspend fun findUserByUserIdAndPassword(userId: String, password: String): Long
 

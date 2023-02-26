@@ -10,6 +10,7 @@ import com.myfood.server.data.resouce.local.auth.AuthLocalDataSource
 import com.myfood.server.data.resouce.remote.auth.AuthRemoteDataSource
 import com.myfood.server.utility.constant.AppConstant
 import com.myfood.server.utility.constant.ResponseKeyConstant
+import com.myfood.server.utility.exception.ApplicationException
 import com.myfood.server.utility.jwt.JwtHelper
 import java.io.UnsupportedEncodingException
 import java.math.BigInteger
@@ -23,9 +24,7 @@ internal class AuthRepositoryImpl(
     private val authRemoteDataSource: AuthRemoteDataSource,
 ) : AuthRepository {
 
-    override suspend fun login(email: String, password: String): Resource<BaseResponse<TokenResponse>> {
-        val response = BaseResponse<TokenResponse>()
-
+    override suspend fun login(email: String, password: String): TokenResponse {
         val userId = authRemoteDataSource.findUserIdByEmailAndPassword(
             email,
             encryptSHA(password),
@@ -59,24 +58,18 @@ internal class AuthRepositoryImpl(
                 val insertAuthCount =
                     authLocalDataSource.insertAuth(authId, accessToken, refreshToken, status, isBackup)
                 if (insertAuthCount == 1) {
-                    val tokenResponse = TokenResponse(
+                    TokenResponse(
                         accessToken = accessToken,
                         refreshToken = refreshToken,
                     )
-                    response.status = ResponseKeyConstant.SUCCESS
-                    response.result = tokenResponse
-                    Resource.Success(response)
                 } else {
-                    response.error = BaseError(message = "Login invalid.")
-                    Resource.Error(response)
+                    throw ApplicationException("Login invalid.")
                 }
             } else {
-                response.error = BaseError(message = "Login invalid.")
-                Resource.Error(response)
+                throw ApplicationException("Login invalid.")
             }
         } else {
-            response.error = BaseError(message = "Email or password incorrect.")
-            Resource.Error(response)
+            throw ApplicationException("Email or password incorrect.")
         }
     }
 
@@ -84,9 +77,7 @@ internal class AuthRepositoryImpl(
         return authRemoteDataSource.findUserByEmail(email)
     }
 
-    override suspend fun register(registerRequest: RegisterRequest): Resource<BaseResponse<TokenResponse>> {
-        val response = BaseResponse<TokenResponse>()
-
+    override suspend fun register(registerRequest: RegisterRequest): TokenResponse {
         val insertUserCount = authRemoteDataSource.insertUser(
             userId = UUID.randomUUID().toString().replace("-", ""),
             registerRequest = registerRequest.copy(password = encryptSHA(registerRequest.password!!)),
@@ -95,8 +86,7 @@ internal class AuthRepositoryImpl(
         return if (insertUserCount > 0) {
             login(registerRequest.email!!, registerRequest.password)
         } else {
-            response.error = BaseError(message = "Registration failed")
-            Resource.Error(response)
+            throw ApplicationException("Registration failed")
         }
     }
 
