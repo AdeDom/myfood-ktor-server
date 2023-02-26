@@ -3,12 +3,11 @@ package com.myfood.server.utility.jwt
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.impl.PublicClaims
+import com.myfood.server.plugins.JwtConfiguration
 import java.util.*
 
 internal class JwtHelper(
-    private val secret: String,
-    private val issuer: String,
-    private val audience: String,
+    private val jwtConfiguration: JwtConfiguration,
 ) {
 
     companion object {
@@ -17,20 +16,20 @@ internal class JwtHelper(
 
     fun encodeAccessToken(userId: String): String {
         return JWT.create()
-            .withAudience(audience)
-            .withIssuer(issuer)
+            .withAudience(jwtConfiguration.audience)
+            .withIssuer(jwtConfiguration.issuer)
             .withClaim(USER_ID, userId)
             .withExpiresAt(Date(System.currentTimeMillis() + (36_000_00 * 24 * 1)))
-            .sign(Algorithm.HMAC512(secret))
+            .sign(Algorithm.HMAC512(jwtConfiguration.secret))
     }
 
     fun encodeRefreshToken(userId: String): String {
         return JWT.create()
-            .withAudience(audience)
-            .withIssuer(issuer)
+            .withAudience(jwtConfiguration.audience)
+            .withIssuer(jwtConfiguration.issuer)
             .withClaim(USER_ID, userId)
             .withExpiresAt(Date(System.currentTimeMillis() + (36_000_00 * 24 * 7)))
-            .sign(Algorithm.HMAC512(secret))
+            .sign(Algorithm.HMAC512(jwtConfiguration.secret))
     }
 
     fun decodeJwtGetUserId(token: String?): String {

@@ -14,20 +14,7 @@ internal fun configurationModule(
     jwtConfiguration: JwtConfiguration,
 ) = module {
 
-    single<MySqlDatabase> {
-        MySqlDatabaseImpl(
-            usernameSecret = databaseConfiguration.username,
-            passwordSecret = databaseConfiguration.password,
-            jdbcUrlSecret = databaseConfiguration.jdbcUrl,
-        )
-    }
+    single<MySqlDatabase> { MySqlDatabaseImpl(databaseConfiguration) }
     single<SqliteDatabase> { SqliteDatabaseImpl() }
-
-    single {
-        JwtHelper(
-            secret = jwtConfiguration.secret,
-            issuer = jwtConfiguration.issuer,
-            audience = jwtConfiguration.audience,
-        )
-    }
+    single { JwtHelper(jwtConfiguration) }
 }

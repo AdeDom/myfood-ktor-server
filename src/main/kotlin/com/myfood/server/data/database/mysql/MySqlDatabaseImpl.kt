@@ -1,23 +1,22 @@
 package com.myfood.server.data.database.mysql
 
+import com.myfood.server.plugins.DatabaseConfiguration
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import org.jetbrains.exposed.sql.Database
 
 internal class MySqlDatabaseImpl(
-    private val usernameSecret: String,
-    private val passwordSecret: String,
-    private val jdbcUrlSecret: String,
+    private val databaseConfiguration: DatabaseConfiguration,
 ) : MySqlDatabase {
 
     private var database: Database
 
     init {
         val config = HikariConfig().apply {
-            jdbcUrl = jdbcUrlSecret
+            jdbcUrl = databaseConfiguration.jdbcUrl
             driverClassName = "com.mysql.cj.jdbc.Driver"
-            username = usernameSecret
-            password = passwordSecret
+            username = databaseConfiguration.username
+            password = databaseConfiguration.password
             maximumPoolSize = 10
         }
         val dataSource = HikariDataSource(config)
