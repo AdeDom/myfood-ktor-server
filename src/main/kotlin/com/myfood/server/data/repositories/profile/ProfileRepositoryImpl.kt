@@ -1,18 +1,15 @@
 package com.myfood.server.data.repositories.profile
 
-import com.myfood.server.data.models.base.BaseError
-import com.myfood.server.data.models.base.BaseResponse
 import com.myfood.server.data.models.entities.AuthMasterEntity
 import com.myfood.server.data.models.entities.UserEntity
 import com.myfood.server.data.models.request.ChangeProfileRequest
 import com.myfood.server.data.models.response.UserProfileResponse
-import com.myfood.server.data.repositories.Resource
 import com.myfood.server.data.resouce.local.auth.AuthLocalDataSource
 import com.myfood.server.data.resouce.local.user.UserLocalDataSource
 import com.myfood.server.data.resouce.remote.profile.ProfileRemoteDataSource
 import com.myfood.server.data.resouce.remote.user.UserRemoteDataSource
 import com.myfood.server.utility.constant.AppConstant
-import com.myfood.server.utility.constant.ResponseKeyConstant
+import com.myfood.server.utility.exception.ApplicationException
 import com.myfood.server.utility.jwt.JwtHelper
 
 internal class ProfileRepositoryImpl(
@@ -23,9 +20,7 @@ internal class ProfileRepositoryImpl(
     private val profileRemoteDataSource: ProfileRemoteDataSource,
 ) : ProfileRepository {
 
-    override suspend fun userProfile(userId: String): Resource<BaseResponse<UserProfileResponse>> {
-        val response = BaseResponse<UserProfileResponse>()
-
+    override suspend fun userProfile(userId: String): UserProfileResponse {
         val userLocalAll = userLocalDataSource.getUserAll()
         if (userLocalAll.isEmpty()) {
             val userRemoteAll = userRemoteDataSource.getUserAll()
@@ -39,7 +34,7 @@ internal class ProfileRepositoryImpl(
 
         val userEntity = userLocalDataSource.getUserByUserId(userId)
         return if (userEntity != null) {
-            val userProfileResponse = UserProfileResponse(
+            UserProfileResponse(
                 userId = userEntity.userId,
                 email = userEntity.email,
                 name = userEntity.name,
@@ -50,12 +45,8 @@ internal class ProfileRepositoryImpl(
                 created = userEntity.created.toString(AppConstant.DATE_TIME_FORMAT_RESPONSE),
                 updated = userEntity.updated?.toString(AppConstant.DATE_TIME_FORMAT_RESPONSE),
             )
-            response.status = ResponseKeyConstant.SUCCESS
-            response.result = userProfileResponse
-            Resource.Success(response)
         } else {
-            response.error = BaseError(message = "User profile is null or empty.")
-            Resource.Error(response)
+            throw ApplicationException("User profile is null or empty.")
         }
     }
 
@@ -76,26 +67,16 @@ internal class ProfileRepositoryImpl(
         }
     }
 
-    override suspend fun changeProfile(
-        userId: String,
-        changeProfileRequest: ChangeProfileRequest,
-    ): Resource<BaseResponse<String>> {
-        val response = BaseResponse<String>()
-
+    override suspend fun changeProfile(userId: String, changeProfileRequest: ChangeProfileRequest): String {
         val isUpdateUserProfile = profileRemoteDataSource.updateUserProfile(userId, changeProfileRequest) == 1
         return if (isUpdateUserProfile) {
-            response.status = ResponseKeyConstant.SUCCESS
-            response.result = "Change profile success."
-            Resource.Success(response)
+            "Change profile success."
         } else {
-            response.error = BaseError(message = "Change profile failed.")
-            Resource.Error(response)
+            throw ApplicationException("Change profile failed.")
         }
     }
 
-    override suspend fun deleteAccount(userId: String): Resource<BaseResponse<String>> {
-        val response = BaseResponse<String>()
-
+    override suspend fun deleteAccount(userId: String): String {
         val isUpdateStatus = profileRemoteDataSource.updateUserStatus(userId, AppConstant.IN_ACTIVE) == 1
         return if (isUpdateStatus) {
             val getAuthListOriginal = authLocalDataSource.getAuthListByStatusLoginOrRefresh()
@@ -117,16 +98,12 @@ internal class ProfileRepositoryImpl(
                 updateAuthLogoutCount += authLocalDataSource.updateAuthStatusLogoutByAuthId(authId)
             }
             if (updateAuthLogoutCount == getAuthIdList.size) {
-                response.status = ResponseKeyConstant.SUCCESS
-                response.result = "Delete account successfully."
-                Resource.Success(response)
+                "Delete account successfully."
             } else {
-                response.error = BaseError(message = "Delete account failed.")
-                Resource.Error(response)
+                throw ApplicationException("Delete account failed.")
             }
         } else {
-            response.error = BaseError(message = "Delete account failed.")
-            Resource.Error(response)
+            throw ApplicationException("Delete account failed.")
         }
     }
 }
