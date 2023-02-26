@@ -15,10 +15,11 @@ import org.koin.ktor.plugin.Koin
 import org.koin.logger.slf4jLogger
 
 internal fun Application.configureKoin() {
-    val databaseNameEnv = environment.config.property("my_food_db.database_name").getString()
-    val usernameEnv = environment.config.property("my_food_db.username").getString()
-    val passwordEnv = environment.config.property("my_food_db.password").getString()
-    val jdbcUrlEnv = environment.config.property("my_food_db.jdbc_url").getString()
+    val flavor = environment.config.property("database.flavor").getString()
+    val databaseNameEnv = environment.config.property("database.$flavor.database_name").getString()
+    val usernameEnv = environment.config.property("database.$flavor.username").getString()
+    val passwordEnv = environment.config.property("database.$flavor.password").getString()
+    val jdbcUrlEnv = environment.config.property("database.$flavor.jdbc_url").getString()
 
     val secret = environment.config.property("jwt.secret").getString()
     val issuer = environment.config.property("jwt.issuer").getString()
