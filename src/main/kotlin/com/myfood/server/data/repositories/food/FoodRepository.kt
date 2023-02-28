@@ -1,13 +1,10 @@
 package com.myfood.server.data.repositories.food
 
-import com.myfood.server.data.models.entities.MyFoodEntity
 import com.myfood.server.data.models.request.InsertFoodRequest
 import com.myfood.server.data.models.response.FoodAndCategoryResponse
 import com.myfood.server.data.models.response.FoodDetailResponse
 
 internal interface FoodRepository {
-
-    suspend fun getMyFood(): List<MyFoodEntity>
 
     suspend fun insertFood(insertFoodRequest: InsertFoodRequest): String
 

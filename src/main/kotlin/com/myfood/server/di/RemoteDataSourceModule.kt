@@ -9,8 +9,6 @@ import com.myfood.server.data.resouce.remote.favorite.FavoriteRemoteDataSource
 import com.myfood.server.data.resouce.remote.favorite.FavoriteRemoteDataSourceImpl
 import com.myfood.server.data.resouce.remote.food.FoodRemoteDataSource
 import com.myfood.server.data.resouce.remote.food.FoodRemoteDataSourceImpl
-import com.myfood.server.data.resouce.remote.food.MyFoodRemoteDataSource
-import com.myfood.server.data.resouce.remote.food.MyFoodRemoteDataSourceImpl
 import com.myfood.server.data.resouce.remote.profile.ProfileRemoteDataSource
 import com.myfood.server.data.resouce.remote.profile.ProfileRemoteDataSourceImpl
 import com.myfood.server.data.resouce.remote.rating_score.RatingScoreRemoteDataSource
@@ -22,7 +20,6 @@ import org.koin.dsl.module
 internal val remoteDataSourceModule = module {
 
     single<UserRemoteDataSource> { UserRemoteDataSourceImpl(get<MySqlDatabase>().getDatabase()) }
-    single<MyFoodRemoteDataSource> { MyFoodRemoteDataSourceImpl(get<MySqlDatabase>().getDatabase()) }
     single<AuthRemoteDataSource> { AuthRemoteDataSourceImpl(get<MySqlDatabase>().getDatabase()) }
     single<ProfileRemoteDataSource> { ProfileRemoteDataSourceImpl(get<MySqlDatabase>().getDatabase()) }
     single<CategoryRemoteDataSource> { CategoryRemoteDataSourceImpl(get<MySqlDatabase>().getDatabase()) }

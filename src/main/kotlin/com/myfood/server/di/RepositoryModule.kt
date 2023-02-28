@@ -16,7 +16,7 @@ import org.koin.dsl.module
 
 internal val repositoryModule = module {
 
-    single<FoodRepository> { FoodRepositoryImpl(get(), get(), get(), get(), get(), get()) }
+    single<FoodRepository> { FoodRepositoryImpl(get(), get(), get(), get(), get()) }
     single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
     single<ProfileRepository> { ProfileRepositoryImpl(get(), get(), get()) }
     single<CategoryRepository> { CategoryRepositoryImpl(get(), get()) }

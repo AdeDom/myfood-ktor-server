@@ -1,6 +1,5 @@
 package com.myfood.server.data.repositories.food
 
-import com.myfood.server.data.models.entities.MyFoodEntity
 import com.myfood.server.data.models.request.InsertFoodRequest
 import com.myfood.server.data.models.response.FoodAndCategoryResponse
 import com.myfood.server.data.models.response.FoodDetailResponse
@@ -9,7 +8,6 @@ import com.myfood.server.data.resouce.local.food.FoodLocalDataSource
 import com.myfood.server.data.resouce.local.food_and_category.FoodAndCategoryLocalDataSource
 import com.myfood.server.data.resouce.local.rating_score.RatingScoreLocalDataSource
 import com.myfood.server.data.resouce.remote.food.FoodRemoteDataSource
-import com.myfood.server.data.resouce.remote.food.MyFoodRemoteDataSource
 import com.myfood.server.utility.constant.AppConstant
 import com.myfood.server.utility.exception.ApplicationException
 import kotlinx.coroutines.async
@@ -21,13 +19,8 @@ internal class FoodRepositoryImpl(
     private val foodAndCategoryLocalDataSource: FoodAndCategoryLocalDataSource,
     private val favoriteLocalDataSource: FavoriteLocalDataSource,
     private val ratingScoreLocalDataSource: RatingScoreLocalDataSource,
-    private val myFoodRemoteDataSource: MyFoodRemoteDataSource,
     private val foodRemoteDataSource: FoodRemoteDataSource,
 ) : FoodRepository {
-
-    override suspend fun getMyFood(): List<MyFoodEntity> {
-        return myFoodRemoteDataSource.getMyFood()
-    }
 
     override suspend fun insertFood(insertFoodRequest: InsertFoodRequest): String {
         val isInsertFood = foodRemoteDataSource.insertFood(insertFoodRequest, AppConstant.ACTIVE) == 1

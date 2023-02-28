@@ -2,7 +2,10 @@ package com.myfood.server.route.http
 
 import com.myfood.server.data.models.base.BaseResponse
 import com.myfood.server.data.models.request.InsertFoodRequest
-import com.myfood.server.usecase.food.*
+import com.myfood.server.usecase.food.GetFoodAndCategoryGroupAllUseCase
+import com.myfood.server.usecase.food.GetFoodByCategoryIdUseCase
+import com.myfood.server.usecase.food.GetFoodDetailUseCase
+import com.myfood.server.usecase.food.InsertFoodUseCase
 import com.myfood.server.utility.constant.ResponseKeyConstant
 import com.myfood.server.utility.exception.ApplicationException
 import io.ktor.http.*
@@ -13,20 +16,6 @@ import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 
 internal fun Route.foodRoute() {
-
-    val myFoodUseCase by inject<MyFoodUseCase>()
-    get("/api/my/food") {
-        try {
-            val result = myFoodUseCase()
-            val response = BaseResponse(
-                status = ResponseKeyConstant.SUCCESS,
-                result = result,
-            )
-            call.respond(HttpStatusCode.OK, response)
-        } catch (e: ApplicationException) {
-            call.respond(HttpStatusCode.BadRequest, e.toBaseError())
-        }
-    }
 
     val insertFoodUseCase by inject<InsertFoodUseCase>()
     post("/api/food/insert") {

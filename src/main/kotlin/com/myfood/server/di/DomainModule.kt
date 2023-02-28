@@ -7,7 +7,10 @@ import com.myfood.server.usecase.favorite.DeleteFavoriteAllUseCase
 import com.myfood.server.usecase.favorite.GetFavoriteAllUseCase
 import com.myfood.server.usecase.favorite.MyFavoriteUseCase
 import com.myfood.server.usecase.favorite.SyncDataFavoriteUseCase
-import com.myfood.server.usecase.food.*
+import com.myfood.server.usecase.food.GetFoodAndCategoryGroupAllUseCase
+import com.myfood.server.usecase.food.GetFoodByCategoryIdUseCase
+import com.myfood.server.usecase.food.GetFoodDetailUseCase
+import com.myfood.server.usecase.food.InsertFoodUseCase
 import com.myfood.server.usecase.profile.ChangeProfileUseCase
 import com.myfood.server.usecase.profile.DeleteAccountUseCase
 import com.myfood.server.usecase.profile.UserProfileUseCase
@@ -21,7 +24,6 @@ import org.koin.dsl.module
 
 internal val domainModule = module {
 
-    single { MyFoodUseCase(get()) }
     single { ValidateEmailUseCase() }
     single { ValidatePasswordUseCase() }
     single { LoginUseCase(get(), get(), get()) }
