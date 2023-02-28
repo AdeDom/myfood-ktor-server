@@ -8,11 +8,10 @@ import com.myfood.server.data.models.request.TokenRequest
 import com.myfood.server.usecase.auth.*
 import com.myfood.server.utility.constant.ResponseKeyConstant
 import com.myfood.server.utility.exception.ApplicationException
-import com.myfood.server.utility.extension.postAuth
-import com.myfood.server.utility.extension.putAuth
 import com.myfood.server.utility.extension.userId
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -66,33 +65,35 @@ internal fun Route.authRoute() {
     }
 
     val logoutUseCase by inject<LogoutUseCase>()
-    postAuth("/api/auth/logout") {
-        val userId = call.userId
-        try {
-            val result = logoutUseCase(userId)
-            val response = BaseResponse(
-                status = ResponseKeyConstant.SUCCESS,
-                result = result,
-            )
-            call.respond(HttpStatusCode.OK, response)
-        } catch (e: ApplicationException) {
-            call.respond(HttpStatusCode.BadRequest, e.toBaseError())
+    authenticate {
+        post("/api/auth/logout") {
+            try {
+                val result = logoutUseCase(userId)
+                val response = BaseResponse(
+                    status = ResponseKeyConstant.SUCCESS,
+                    result = result,
+                )
+                call.respond(HttpStatusCode.OK, response)
+            } catch (e: ApplicationException) {
+                call.respond(HttpStatusCode.BadRequest, e.toBaseError())
+            }
         }
     }
 
     val changePasswordUseCase by inject<ChangePasswordUseCase>()
-    putAuth("/api/auth/changePassword") {
-        val userId = call.userId
-        val request = call.receive<ChangePasswordRequest>()
-        try {
-            val result = changePasswordUseCase(userId, request)
-            val response = BaseResponse(
-                status = ResponseKeyConstant.SUCCESS,
-                result = result,
-            )
-            call.respond(HttpStatusCode.OK, response)
-        } catch (e: ApplicationException) {
-            call.respond(HttpStatusCode.BadRequest, e.toBaseError())
+    authenticate {
+        put("/api/auth/changePassword") {
+            val request = call.receive<ChangePasswordRequest>()
+            try {
+                val result = changePasswordUseCase(userId, request)
+                val response = BaseResponse(
+                    status = ResponseKeyConstant.SUCCESS,
+                    result = result,
+                )
+                call.respond(HttpStatusCode.OK, response)
+            } catch (e: ApplicationException) {
+                call.respond(HttpStatusCode.BadRequest, e.toBaseError())
+            }
         }
     }
 }

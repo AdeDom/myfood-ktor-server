@@ -1,19 +1,9 @@
 package com.myfood.server.utility.extension
 
-import com.auth0.jwt.JWT
-import com.myfood.server.utility.constant.RequestKeyConstant
-import com.myfood.server.utility.jwt.JwtHelper
+import com.myfood.server.utility.jwt.UserIdPrincipal
 import io.ktor.server.application.*
-import io.ktor.server.request.*
+import io.ktor.server.auth.*
+import io.ktor.util.pipeline.*
 
-internal val ApplicationCall.userId: String?
-    get() = run {
-        val authKey = request.header(RequestKeyConstant.AUTHORIZATION_KEY)
-        val accessToken = authKey?.replace("Bearer", "")?.trim()
-        if (!accessToken.isNullOrBlank()) {
-            val userId = JWT().decodeJwt(accessToken).getClaim(JwtHelper.USER_ID).asString()
-            userId
-        } else {
-            null
-        }
-    }
+internal val PipelineContext<*, ApplicationCall>.userId: String?
+    get() = call.principal<UserIdPrincipal>()?.userId
