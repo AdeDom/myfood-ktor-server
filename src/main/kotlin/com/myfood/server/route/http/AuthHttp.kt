@@ -95,18 +95,4 @@ internal fun Route.authRoute() {
             call.respond(HttpStatusCode.BadRequest, e.toBaseError())
         }
     }
-
-    val syncDataAuthUseCase by inject<SyncDataAuthUseCase>()
-    post("/api/auth/syncDataAuth") {
-        try {
-            val result = syncDataAuthUseCase()
-            val response = BaseResponse(
-                status = ResponseKeyConstant.SUCCESS,
-                result = result,
-            )
-            call.respond(HttpStatusCode.OK, response)
-        } catch (e: ApplicationException) {
-            call.respond(HttpStatusCode.BadRequest, e.toBaseError())
-        }
-    }
 }

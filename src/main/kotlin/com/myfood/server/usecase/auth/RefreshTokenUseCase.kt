@@ -22,16 +22,7 @@ internal class RefreshTokenUseCase(
                 throw ApplicationException("Refresh token is null or blank.")
             }
 
-            isValidateAccessTokenAndRefreshToken(accessToken, refreshToken) -> {
-                throw ApplicationException("Access token or refresh token incorrect.")
-            }
-
-            isValidateIsLogout(accessToken, refreshToken) -> {
-                throw ApplicationException("Token is already used.")
-            }
-
             isValidateRefreshToken(refreshToken) -> {
-                authRepository.updateStatusLogoutByAccessTokenAndRefreshToken(accessToken, refreshToken)
                 throw ApplicationException("Token is already used.")
             }
 
@@ -46,15 +37,5 @@ internal class RefreshTokenUseCase(
         val currentTime = System.currentTimeMillis() / 1_000L
         val isTokenExpire = expiresAtClaim.minus(currentTime) > 0
         return !isTokenExpire
-    }
-
-    private suspend fun isValidateAccessTokenAndRefreshToken(accessToken: String, refreshToken: String): Boolean {
-        val tokenCount = authRepository.findTokenByAccessTokenAndRefreshToken(accessToken, refreshToken)
-        return tokenCount == 0L
-    }
-
-    private suspend fun isValidateIsLogout(accessToken: String, refreshToken: String): Boolean {
-        val tokenLogoutCount = authRepository.findTokenLogoutByAccessTokenAndRefreshToken(accessToken, refreshToken)
-        return tokenLogoutCount == 1L
     }
 }

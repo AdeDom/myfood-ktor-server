@@ -18,14 +18,4 @@ internal interface AuthRepository {
     suspend fun logout(userId: String): String
 
     suspend fun refreshToken(refreshTokenMaster: String): TokenResponse
-
-    suspend fun updateStatusLogoutByAccessTokenAndRefreshToken(accessToken: String, refreshToken: String): Int
-
-    suspend fun findTokenByAccessTokenAndRefreshToken(accessToken: String, refreshToken: String): Long
-
-    suspend fun findTokenLogoutByAccessTokenAndRefreshToken(accessToken: String, refreshToken: String): Long
-
-    suspend fun syncDataAuth(): String
-
-    suspend fun findStatusLoginOrRefreshByAccessToken(accessToken: String): Long
 }

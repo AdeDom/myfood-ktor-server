@@ -1,13 +1,13 @@
 package com.myfood.server.usecase.rating_score
 
+import com.auth0.jwt.JWT
 import com.myfood.server.data.models.request.MyRatingScoreRequest
 import com.myfood.server.data.models.web_sockets.RatingScoreWebSocketsResponse
 import com.myfood.server.data.repositories.rating_score.RatingScoreRepository
-import com.myfood.server.usecase.auth.TokenUseCase
 import com.myfood.server.utility.exception.ApplicationException
+import com.myfood.server.utility.jwt.JwtHelper
 
 internal class MyRatingScoreUseCase(
-    private val tokenUseCase: TokenUseCase,
     private val ratingScoreRepository: RatingScoreRepository,
 ) {
 
@@ -17,11 +17,14 @@ internal class MyRatingScoreUseCase(
     ): RatingScoreWebSocketsResponse {
         val (foodId, ratingScore) = myRatingScoreRequest
         return when {
-            tokenUseCase.isValidateToken(authKey) -> throw ApplicationException(tokenUseCase.getBaseError(authKey))
             foodId == null -> throw ApplicationException("Food id is null.")
             ratingScore == null -> throw ApplicationException("Rating score is null.")
             ratingScore !in 0F..5F -> throw ApplicationException("Rating score invalid.")
-            else -> ratingScoreRepository.myRatingScore(tokenUseCase.getUserId(authKey), foodId, ratingScore)
+            else -> {
+                val accessToken = authKey?.replace("Bearer", "")?.trim()
+                val userId = JWT().decodeJwt(accessToken).getClaim(JwtHelper.USER_ID).asString()
+                ratingScoreRepository.myRatingScore(userId, foodId, ratingScore)
+            }
         }
     }
 }

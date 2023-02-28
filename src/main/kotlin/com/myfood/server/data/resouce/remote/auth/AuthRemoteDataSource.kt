@@ -1,6 +1,5 @@
 package com.myfood.server.data.resouce.remote.auth
 
-import com.myfood.server.data.models.entities.AuthEntity
 import com.myfood.server.data.models.request.RegisterRequest
 
 internal interface AuthRemoteDataSource {
@@ -14,8 +13,4 @@ internal interface AuthRemoteDataSource {
     suspend fun findUserByUserIdAndPassword(userId: String, password: String): Long
 
     suspend fun updateUserPassword(userId: String, password: String): Int
-
-    suspend fun replaceAuthAll(authList: List<AuthEntity>): Int
-
-    suspend fun getAuthAll(): List<AuthEntity>
 }

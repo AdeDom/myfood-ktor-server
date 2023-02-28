@@ -40,12 +40,10 @@ internal val domainModule = module {
     single { GetFoodAndCategoryGroupAllUseCase(get(), get()) }
     single { GetFavoriteAllUseCase(get()) }
     single { DeleteFavoriteAllUseCase(get()) }
-    single { MyFavoriteUseCase(get(), get()) }
+    single { MyFavoriteUseCase(get()) }
     single { SyncDataFavoriteUseCase(get()) }
     single { GetRatingScoreAllUseCase(get()) }
     single { DeleteRatingScoreAllUseCase(get()) }
-    single { MyRatingScoreUseCase(get(), get()) }
+    single { MyRatingScoreUseCase(get()) }
     single { SyncDataRatingScoreUseCase(get()) }
-    single { SyncDataAuthUseCase(get()) }
-    single { TokenUseCase(get()) }
 }

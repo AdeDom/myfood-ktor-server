@@ -1,8 +1,6 @@
 package com.myfood.server.di
 
 import com.myfood.server.data.database.sqlite.SqliteDatabase
-import com.myfood.server.data.resouce.local.auth.AuthLocalDataSource
-import com.myfood.server.data.resouce.local.auth.AuthLocalDataSourceImpl
 import com.myfood.server.data.resouce.local.category.CategoryLocalDataSource
 import com.myfood.server.data.resouce.local.category.CategoryLocalDataSourceImpl
 import com.myfood.server.data.resouce.local.favorite.FavoriteLocalDataSource
@@ -21,7 +19,6 @@ internal val localDataSourceModule = module {
 
     single<FavoriteLocalDataSource> { FavoriteLocalDataSourceImpl(get<SqliteDatabase>().getDatabase()) }
     single<RatingScoreLocalDataSource> { RatingScoreLocalDataSourceImpl(get<SqliteDatabase>().getDatabase()) }
-    single<AuthLocalDataSource> { AuthLocalDataSourceImpl(get<SqliteDatabase>().getDatabase()) }
 
     single<UserLocalDataSource> { UserLocalDataSourceImpl() }
     single<CategoryLocalDataSource> { CategoryLocalDataSourceImpl() }

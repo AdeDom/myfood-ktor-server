@@ -1,15 +1,12 @@
 package com.myfood.server.data.resouce.remote.auth
 
-import com.myfood.server.data.database.mysql.AuthTable
 import com.myfood.server.data.database.mysql.UserTable
-import com.myfood.server.data.models.entities.AuthEntity
 import com.myfood.server.data.models.request.RegisterRequest
 import com.myfood.server.utility.constant.AppConstant
 import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormat
 
 internal class AuthRemoteDataSourceImpl(
     private val db: Database,
@@ -81,50 +78,6 @@ internal class AuthRemoteDataSourceImpl(
                 it[UserTable.password] = password
                 it[updated] = DateTime(System.currentTimeMillis() + AppConstant.DATE_TIME_THAI)
             }
-        }
-    }
-
-    override suspend fun replaceAuthAll(authList: List<AuthEntity>): Int {
-        val dateTimeFormat = DateTimeFormat.forPattern(AppConstant.DATE_TIME_FORMAT_REQUEST)
-        val statement = newSuspendedTransaction(Dispatchers.IO, db) {
-            AuthTable.batchReplace(authList) { authEntity ->
-                this[AuthTable.authId] = authEntity.authId
-                this[AuthTable.accessToken] = authEntity.accessToken
-                this[AuthTable.refreshToken] = authEntity.refreshToken
-                this[AuthTable.status] = authEntity.status
-                this[AuthTable.created] = DateTime.parse(authEntity.created, dateTimeFormat)
-                authEntity.updated?.let {
-                    this[AuthTable.updated] = DateTime.parse(authEntity.updated, dateTimeFormat)
-                }
-            }
-        }
-
-        return statement.size
-    }
-
-    override suspend fun getAuthAll(): List<AuthEntity> {
-        return newSuspendedTransaction(Dispatchers.IO, db) {
-            AuthTable
-                .slice(
-                    AuthTable.authId,
-                    AuthTable.accessToken,
-                    AuthTable.refreshToken,
-                    AuthTable.status,
-                    AuthTable.created,
-                    AuthTable.updated,
-                )
-                .selectAll()
-                .map { row ->
-                    AuthEntity(
-                        authId = row[AuthTable.authId],
-                        accessToken = row[AuthTable.accessToken],
-                        refreshToken = row[AuthTable.refreshToken],
-                        status = row[AuthTable.status],
-                        isBackup = AppConstant.REMOTE_BACKUP,
-                        created = row[AuthTable.created].toString(AppConstant.DATE_TIME_FORMAT_REQUEST),
-                        updated = row[AuthTable.updated]?.toString(AppConstant.DATE_TIME_FORMAT_REQUEST),
-                    )
-                }
         }
     }
 }
