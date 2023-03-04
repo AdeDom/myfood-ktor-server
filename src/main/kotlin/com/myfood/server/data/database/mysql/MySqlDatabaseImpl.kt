@@ -4,6 +4,8 @@ import com.myfood.server.plugins.DatabaseConfiguration
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.transactions.transaction
 
 internal class MySqlDatabaseImpl(
     private val databaseConfiguration: DatabaseConfiguration,
@@ -21,6 +23,14 @@ internal class MySqlDatabaseImpl(
         }
         val dataSource = HikariDataSource(config)
         database = Database.connect(dataSource)
+
+        transaction {
+            SchemaUtils.create(CategoryTable)
+            SchemaUtils.create(FavoriteTable)
+            SchemaUtils.create(FoodTable)
+            SchemaUtils.create(RatingScoreTable)
+            SchemaUtils.create(UserTable)
+        }
     }
 
     override fun getDatabase(): Database {

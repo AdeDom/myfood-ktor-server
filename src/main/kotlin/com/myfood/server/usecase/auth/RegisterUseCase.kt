@@ -3,6 +3,7 @@ package com.myfood.server.usecase.auth
 import com.myfood.server.data.models.request.RegisterRequest
 import com.myfood.server.data.models.response.TokenResponse
 import com.myfood.server.data.repositories.auth.AuthRepository
+import com.myfood.server.utility.exception.ApplicationException
 
 internal class RegisterUseCase(
     private val authRepository: AuthRepository,
@@ -11,10 +12,10 @@ internal class RegisterUseCase(
     suspend operator fun invoke(registerRequest: RegisterRequest): TokenResponse {
         val (email, password, name) = registerRequest
         return when {
-            email.isNullOrBlank() -> throw Throwable("Email is null or blank.")
-            password.isNullOrBlank() -> throw Throwable("Password is null or blank.")
-            name.isNullOrBlank() -> throw Throwable("Name is null or blank.")
-            isValidateEmail(email) -> throw Throwable("This email already exists.")
+            email.isNullOrBlank() -> throw ApplicationException("Email is null or blank.")
+            password.isNullOrBlank() -> throw ApplicationException("Password is null or blank.")
+            name.isNullOrBlank() -> throw ApplicationException("Name is null or blank.")
+            isValidateEmail(email) -> throw ApplicationException("This email already exists.")
             else -> authRepository.register(registerRequest)
         }
     }
