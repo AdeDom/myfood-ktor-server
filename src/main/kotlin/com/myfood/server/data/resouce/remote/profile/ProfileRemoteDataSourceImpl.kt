@@ -57,8 +57,8 @@ internal class ProfileRemoteDataSourceImpl(
         return newSuspendedTransaction(Dispatchers.IO, db) {
             UserTable.update({ UserTable.userId eq userId }) {
                 it[UserTable.name] = name!!
-                it[UserTable.mobileNo] = mobileNo
-                it[UserTable.address] = address
+                it[UserTable.mobileNo] = mobileNo!!
+                it[UserTable.address] = address!!
                 it[updated] = DateTime(System.currentTimeMillis() + AppConstant.DATE_TIME_THAI)
             }
         }

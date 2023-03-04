@@ -10,11 +10,13 @@ internal class RegisterUseCase(
 ) {
 
     suspend operator fun invoke(registerRequest: RegisterRequest): TokenResponse {
-        val (email, password, name) = registerRequest
+        val (email, password, name, mobileNo, address) = registerRequest
         return when {
             email.isNullOrBlank() -> throw ApplicationException("Email is null or blank.")
             password.isNullOrBlank() -> throw ApplicationException("Password is null or blank.")
             name.isNullOrBlank() -> throw ApplicationException("Name is null or blank.")
+            mobileNo.isNullOrBlank() -> throw ApplicationException("Mobile no is null or blank.")
+            address.isNullOrBlank() -> throw ApplicationException("Address is null or blank.")
             isValidateEmail(email) -> throw ApplicationException("This email already exists.")
             else -> authRepository.register(registerRequest)
         }

@@ -51,8 +51,8 @@ internal class AuthRemoteDataSourceImpl(
                     it[UserTable.email] = email!!
                     it[UserTable.password] = password!!
                     it[UserTable.name] = name!!
-                    it[UserTable.mobileNo] = mobileNo
-                    it[UserTable.address] = address
+                    it[UserTable.mobileNo] = mobileNo!!
+                    it[UserTable.address] = address!!
                     it[UserTable.status] = status
                     it[created] = DateTime(System.currentTimeMillis() + AppConstant.DATE_TIME_THAI)
                     it[updated] = null
